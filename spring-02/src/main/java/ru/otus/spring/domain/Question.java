@@ -3,17 +3,20 @@ package ru.otus.spring.domain;
 import java.io.IOException;
 
 public class Question {
-    private final String   question;           //  вопрос
-    private final String[] possibleAnswer;    // варианты ответов
-    private final int      rightAnswerNumber; // номер правильного ответа
+    private final int questionNumber;    // номер вопроса
+    private final String question;       // вопрос
+    private final String[] possibleAnswer; // варианты ответов
+    private final int rightAnswerNumber; // номер правильного ответа
 
-    public Question(String defintion, String[] possibleAnswer, int rightAnswerNumber) throws IOException {
-        if ((defintion == null)|(possibleAnswer[2] == null)|(rightAnswerNumber==0)){
-            throw new IOException();
-        }
-        this.question         = defintion;
-        this.possibleAnswer    = possibleAnswer;
+    public Question(int questionNumber, String defintion, String[] possibleAnswer, int rightAnswerNumber) throws IOException {
+        this.questionNumber = questionNumber;
+        this.question = defintion;
+        this.possibleAnswer = possibleAnswer;
         this.rightAnswerNumber = rightAnswerNumber;
+    }
+
+    public int getQuestionNumber() {
+        return questionNumber;
     }
 
     public String getQuestion() {

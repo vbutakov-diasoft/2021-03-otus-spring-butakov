@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.QuestionDao;
 import ru.otus.spring.domain.Question;
 
+import java.util.LinkedList;
+
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
@@ -14,10 +16,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionServiceImpl(QuestionDao dao) {
         this.dao = dao;
     }
-    public Question getByNumber(int number) {
-        return dao.findByNumber(number);
-    }
-    public int getCountQuestion() {
-        return dao.getCountQuestion();
+    public LinkedList<Question> findAll() {
+        return dao.findAll();
     }
 }

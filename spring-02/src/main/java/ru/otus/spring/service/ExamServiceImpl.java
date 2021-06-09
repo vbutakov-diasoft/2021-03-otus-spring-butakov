@@ -2,33 +2,36 @@ package ru.otus.spring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.otus.spring.domain.Question;
 import ru.otus.spring.domain.Student;
+
+import java.util.LinkedList;
 
 @Service
 public class ExamServiceImpl implements ExamService {
 
-    private Student student;
-    private QuestionService questionService;
-    private ProcessService processService;
+    private final QuestionService questionService;
+    private final AskService askService;
+    private final ResultService resultService;
+    private LinkedList<Question> questions;
 
     @Autowired
-    public ExamServiceImpl(QuestionService questionService, ProcessService processService, Student student) {
-        this.student = student;
+    public ExamServiceImpl(QuestionService questionService, AskService askService, ResultService resultService) {
         this.questionService = questionService;
-        this.processService = processService;
-    }
-
-    public ExamServiceImpl() {
+        this.askService = askService;
+        this.resultService = resultService;
     }
 
     public void testing() {
-        this.student = processService.askStudentName();
+        Student student = new Student();
+        student = askService.askStudentName();
+        this.questions = questionService.findAll();
         int res = 0;
-        for (int i = 0; i < questionService.getCountQuestion(); i++) {
-            if (processService.askQuestion(questionService.getByNumber(i), i + 1)) {
+        for (int i = 0; i < this.questions.size(); i++) {
+            if (askService.askQuestion(this.questions.get(i), i + 1)) {
                 res++;
             }
         }
-        processService.printResult(this.student.getName(), res);
+        resultService.printResult(student.getName(), res);
     }
 }

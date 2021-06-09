@@ -2,8 +2,9 @@ package ru.otus.spring.service;
 
 import ru.otus.spring.domain.Question;
 
+import java.util.LinkedList;
+
 public interface QuestionService {
 
-    Question getByNumber(int number);
-      int getCountQuestion();
+    LinkedList<Question> findAll();
 }

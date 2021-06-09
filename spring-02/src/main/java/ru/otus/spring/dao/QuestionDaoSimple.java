@@ -2,7 +2,6 @@ package ru.otus.spring.dao;
 
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.Locale;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -13,14 +12,14 @@ import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Question;
 
 @Repository
-public class QuestionDaoSimple implements QuestionDao {
+public final class QuestionDaoSimple implements QuestionDao {
 
-    private LinkedList<Question> questions;
+    private final LinkedList<Question> questions = new LinkedList<Question>();
 
-    public QuestionDaoSimple(@Value("${file.name}") String fileName, @Value("${lang.locale}") Locale locale) {
+    public QuestionDaoSimple(@Value("${file.name}") String fileName) {
         CSVReader csvReader;
         try {
-            String local_file_name = fileName+"_"+locale.toString()+".csv";
+            String local_file_name = fileName;
             csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(local_file_name)));
             char separator = ';';
             CSVParser parser = new CSVParserBuilder().withSeparator(separator)
@@ -28,7 +27,6 @@ public class QuestionDaoSimple implements QuestionDao {
             String[] nextLine;
             int index = 0;
 
-            this.questions = new LinkedList<Question>();
             while ((nextLine = csvReader.readNext()) != null) {
                 for (String string : nextLine) {
                     String[] value;
@@ -36,29 +34,26 @@ public class QuestionDaoSimple implements QuestionDao {
 
                     String[] answers = new String[3];
                     try {
-                        answers[0] = value[1];
-                        answers[1] = value[2];
-                        answers[2] = value[3];
-                        Question question = new Question(value[0], answers, Integer.valueOf(value[4]));
+                        answers[0] = value[2];
+                        answers[1] = value[3];
+                        answers[2] = value[4];
+                        Question question = new Question(Integer.valueOf(value[0]), value[1], answers, Integer.valueOf(value[5]));
                         questions.add(question);
                         index++;
                     } catch (Exception e) {
-                        System.out.println("Ошибка загрузки вопрос №" + String.valueOf(index + 1));
+                        System.out.println(e.getMessage());
                     }
 
                 }
             }
+            csvReader.close();
         } catch (Exception e) {
-            System.out.println("Ошибка загрузки файла!!!");
+            System.out.println(e.getMessage());
         }
     }
 
-    public Question findByNumber(int number) {
-        return questions.get(number);
-    }
-
-    public int getCountQuestion(){
-        return questions.size();
+    public LinkedList<Question> findAll() {
+        return questions;
     }
 
 }

@@ -13,12 +13,4 @@ public class AppConfig {
     public static PropertySourcesPlaceholderConfigurer propertyConfig(){
         return new PropertySourcesPlaceholderConfigurer();
     }
-
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
-        source.setBasename("/i18n/bundle");
-        source.setDefaultEncoding("UTF-8");
-        return source;
-    }
 }

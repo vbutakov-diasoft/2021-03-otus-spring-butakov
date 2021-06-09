@@ -16,7 +16,7 @@ class QuestionTest {
         answers[1] = "answer";
         answers[2] = "answer";
 
-        Question question = new Question("exam", answers, 1);
+        Question question = new Question(1, "exam", answers, 1);
 
         assertEquals("exam", question.getQuestion());
         assertEquals("answer", question.getPossibleAnswer()[0]);
