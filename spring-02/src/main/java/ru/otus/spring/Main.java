@@ -1,5 +1,6 @@
 package ru.otus.spring;
 
+import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
@@ -10,7 +11,7 @@ import java.io.*;
 @ComponentScan
 public class Main {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) throws IOException, CsvValidationException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         ExamService exam = context.getBean(ExamService.class);
         exam.testing();

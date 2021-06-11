@@ -1,5 +1,6 @@
 package ru.otus.spring.dao;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 
@@ -7,6 +8,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 
+import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Question;
@@ -15,12 +17,15 @@ import ru.otus.spring.domain.Question;
 public final class QuestionDaoSimple implements QuestionDao {
 
     private final LinkedList<Question> questions = new LinkedList<Question>();
+    @Value("${file.name}")
+    private String fileName;
 
-    public QuestionDaoSimple(@Value("${file.name}") String fileName) {
-        CSVReader csvReader;
-        try {
-            String local_file_name = fileName;
-            csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(local_file_name)));
+    public QuestionDaoSimple() {
+    }
+
+    public LinkedList<Question> findAll() throws IOException, CsvValidationException {
+        String localFileName = fileName;
+        try (CSVReader csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(localFileName)))) {
             char separator = ';';
             CSVParser parser = new CSVParserBuilder().withSeparator(separator)
                     .build();
@@ -46,13 +51,9 @@ public final class QuestionDaoSimple implements QuestionDao {
 
                 }
             }
-            csvReader.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Throwable  e) {
+            throw e;
         }
-    }
-
-    public LinkedList<Question> findAll() {
         return questions;
     }
 

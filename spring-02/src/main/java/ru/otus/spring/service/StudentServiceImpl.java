@@ -2,18 +2,24 @@ package ru.otus.spring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.otus.spring.domain.Student;
 
 @Service
-public class ResultServiceImpl implements ResultService{
+public class StudentServiceImpl implements StudentService{
 
     private final InputOutputService ioService;
 
     @Autowired
-    public ResultServiceImpl (InputOutputService ioService) {
+    public StudentServiceImpl (InputOutputService ioService) {
         this.ioService = ioService;
     }
 
-    public void printResult(String name, int rightAnswer) {
+    public Student askStudentName () {
+        ioService.printOut("Student's Name:");
+        return new Student(ioService.readString());
+    }
+
+    public void printTestResult(String name, int rightAnswer) {
         ioService.printOut("Student's Name:");
         ioService.printOut(name);
         ioService.printOut("Quantity of the correct answers:");

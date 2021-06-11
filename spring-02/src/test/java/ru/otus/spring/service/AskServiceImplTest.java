@@ -21,11 +21,11 @@ class AskServiceImplTest {
     @DisplayName("Спросить имя студента")
     void askStudentNameTest() {
         InputOutputService ioMock = mock(InputOutputService.class);
-        AskService askService = new AskServiceImpl(ioMock);
+        StudentService studentService = new StudentServiceImpl(ioMock);
         Mockito.when(ioMock.readString()).thenReturn("Виктор");
         Mockito.doNothing().when(ioMock).printOut(Mockito.anyString());
 
-        Student student = askService.askStudentName();
+        Student student = studentService.askStudentName();
         assertThat(student)
                 .hasFieldOrPropertyWithValue("name", "Виктор");
     }
