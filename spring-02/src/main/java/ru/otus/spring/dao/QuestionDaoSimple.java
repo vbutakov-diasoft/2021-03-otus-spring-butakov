@@ -2,7 +2,9 @@ package ru.otus.spring.dao;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -12,18 +14,19 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Question;
+import ru.otus.spring.exception.QuestionsLoadingException;
 
 @Repository
 public final class QuestionDaoSimple implements QuestionDao {
 
-    private final LinkedList<Question> questions = new LinkedList<Question>();
-    @Value("${file.name}")
-    private String fileName;
+    private final List<Question> questions = new LinkedList<Question>();
+    private final String fileName;
 
-    public QuestionDaoSimple() {
+    public QuestionDaoSimple(@Value("${file.name}") String fileName) {
+        this.fileName = fileName;
     }
 
-    public LinkedList<Question> findAll() throws IOException, CsvValidationException {
+    public List<Question> findAll() throws QuestionsLoadingException {
         String localFileName = fileName;
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(localFileName)))) {
             char separator = ';';
@@ -46,13 +49,13 @@ public final class QuestionDaoSimple implements QuestionDao {
                         questions.add(question);
                         index++;
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        throw new QuestionsLoadingException("Ошибка загрузки файла");
                     }
 
                 }
             }
         } catch (Throwable  e) {
-            throw e;
+            throw new QuestionsLoadingException("Ошибка загрузки файла");
         }
         return questions;
     }

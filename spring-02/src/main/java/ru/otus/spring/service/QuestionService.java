@@ -2,12 +2,12 @@ package ru.otus.spring.service;
 
 import com.opencsv.exceptions.CsvValidationException;
 import ru.otus.spring.domain.Question;
+import ru.otus.spring.exception.QuestionsLoadingException;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.List;
 
 interface QuestionService {
 
-    LinkedList<Question> findAll() throws IOException, CsvValidationException;
-    boolean askQuestion(Question question, int number);
+    List<Question> findAll() throws IOException, CsvValidationException, QuestionsLoadingException;
 }

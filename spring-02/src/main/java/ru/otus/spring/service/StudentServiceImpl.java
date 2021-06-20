@@ -19,14 +19,4 @@ public class StudentServiceImpl implements StudentService{
         return new Student(ioService.readString());
     }
 
-    public void printTestResult(String name, int rightAnswer) {
-        ioService.printOut("Student's Name:");
-        ioService.printOut(name);
-        ioService.printOut("Quantity of the correct answers:");
-        ioService.printOut(String.valueOf(rightAnswer));
-        if (rightAnswer>=3)
-            ioService.printOut("exam passed");
-        else
-            ioService.printOut("exam failed");
-    }
 }

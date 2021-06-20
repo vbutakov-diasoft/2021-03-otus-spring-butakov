@@ -13,10 +13,13 @@ public class InputOutputServiceImpl implements InputOutputService {
     private final InputStream inputStream;
     private final PrintStream printStream;
 
+    private Scanner scanner;
 
     public InputOutputServiceImpl(@Value("#{ T(System).in}") InputStream inputStream, @Value("#{ T(System).out}") PrintStream printStream){
         this.inputStream = inputStream;
         this.printStream = printStream;
+
+        scanner = new Scanner(inputStream);
     }
 
     public void printOut(String st) {
@@ -24,10 +27,10 @@ public class InputOutputServiceImpl implements InputOutputService {
     }
 
     public String readString() {
-        return new Scanner(inputStream).nextLine();
+        return  scanner.nextLine();
     }
 
     public int readInt() {
-        return new Scanner(inputStream).nextInt();
+        return  scanner.nextInt();
     }
 }
