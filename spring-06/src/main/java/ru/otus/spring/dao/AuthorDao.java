@@ -16,6 +16,7 @@ public interface AuthorDao {
     List<Author> findAll();
     Optional<Author> findByID(Long authorID);
     List<Author> findByName(String name);
-    boolean checkExists(Author author);
 
+    boolean checkExistsByName(Author author);
+    boolean checkExistsByID(Author author);
 }

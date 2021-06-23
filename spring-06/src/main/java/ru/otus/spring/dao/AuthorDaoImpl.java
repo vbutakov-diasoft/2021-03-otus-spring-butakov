@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
-public class AuthorDaoImpl implements AuthorDao  {
+public class AuthorDaoImpl implements AuthorDao {
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
     public AuthorDaoImpl(NamedParameterJdbcOperations namedParameterJdbcOperations) {
@@ -25,8 +25,8 @@ public class AuthorDaoImpl implements AuthorDao  {
 
         @Override
         public Author mapRow(ResultSet resultSet, int i) throws SQLException {
-            Long authorID  = resultSet.getLong("authorID");
-            String name    = resultSet.getString("name");
+            Long authorID = resultSet.getLong("authorID");
+            String name = resultSet.getString("name");
             return new Author(authorID, name);
         }
     }
@@ -34,7 +34,7 @@ public class AuthorDaoImpl implements AuthorDao  {
 
     @Override
     public Author insert(Author author) throws AuthorAlreadyExistsException {
-        if (checkExists(author)){
+        if (checkExistsByName(author)) {
             throw new AuthorAlreadyExistsException("Автор " + author.getName() + " уже добавлен в базу!");
         }
 
@@ -51,8 +51,8 @@ public class AuthorDaoImpl implements AuthorDao  {
 
     @Override
     public void update(Author author) throws AuthorNotFoundException {
-        if (!checkExists(author)) {
-            throw new AuthorNotFoundException("Автор c ID="+author.getAuthorID()+" не найден в базе!");
+        if (!checkExistsByID(author)) {
+            throw new AuthorNotFoundException("Автор c ID=" + author.getAuthorID() + " не найден в базе!");
         }
 
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -64,9 +64,9 @@ public class AuthorDaoImpl implements AuthorDao  {
     }
 
     @Override
-    public void delete(Author author) throws AuthorNotFoundException{
-        if (!checkExists(author)) {
-            throw new AuthorNotFoundException("Автор c ID="+author.getAuthorID()+" не найден в базе!");
+    public void delete(Author author) throws AuthorNotFoundException {
+        if (!checkExistsByID(author)) {
+            throw new AuthorNotFoundException("Автор c ID=" + author.getAuthorID() + " не найден в базе!");
         }
 
         Map<String, Object> params = Collections.singletonMap("authorID", author.getAuthorID());
@@ -100,20 +100,24 @@ public class AuthorDaoImpl implements AuthorDao  {
     }
 
     @Override
-    public boolean checkExists(Author author) {
+    public boolean checkExistsByName(Author author) {
         int res = 0;
         MapSqlParameterSource params = new MapSqlParameterSource();
-        if (author.getAuthorID() != 0){
-            params.addValue("authorID", author.getAuthorID());
-            res =  namedParameterJdbcOperations.queryForObject(
-                    "select count(*) from author where authorID = :authorID", params, Integer.class
-            );
-        } else {
-            params.addValue("name", author.getName());
-            res =  namedParameterJdbcOperations.queryForObject(
-                    "select count(*) from author where name = :name", params, Integer.class
-            );
-        }
-        return res>0;
+        params.addValue("name", author.getName());
+        res = namedParameterJdbcOperations.queryForObject(
+                "select count(*) from author where name = :name", params, Integer.class
+        );
+        return res > 0;
+    }
+
+    @Override
+    public boolean checkExistsByID(Author author) {
+        int res = 0;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("authorID", author.getAuthorID());
+        res = namedParameterJdbcOperations.queryForObject(
+                "select count(*) from author where authorID = :authorID", params, Integer.class
+        );
+        return res > 0;
     }
 }
