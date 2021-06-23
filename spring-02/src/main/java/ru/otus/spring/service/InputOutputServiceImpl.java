@@ -10,15 +10,12 @@ import java.util.Scanner;
 @Service
 public class InputOutputServiceImpl implements InputOutputService {
 
-    private final InputStream inputStream;
     private final PrintStream printStream;
 
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public InputOutputServiceImpl(@Value("#{ T(System).in}") InputStream inputStream, @Value("#{ T(System).out}") PrintStream printStream){
-        this.inputStream = inputStream;
         this.printStream = printStream;
-
         scanner = new Scanner(inputStream);
     }
 

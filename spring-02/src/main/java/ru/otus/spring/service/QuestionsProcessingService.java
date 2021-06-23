@@ -4,5 +4,5 @@ import ru.otus.spring.domain.Question;
 
 public interface QuestionsProcessingService {
 
-    boolean askQuestion(Question question, int number);
+    boolean askQuestion(Question question);
 }

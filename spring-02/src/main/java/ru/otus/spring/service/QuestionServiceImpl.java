@@ -20,7 +20,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionServiceImpl(QuestionDao dao) {
         this.dao = dao;
     }
-    public List<Question> findAll() throws QuestionsLoadingException, IOException, CsvValidationException {
+    public List<Question> findAll() throws QuestionsLoadingException{
         return dao.findAll();
     }
 }

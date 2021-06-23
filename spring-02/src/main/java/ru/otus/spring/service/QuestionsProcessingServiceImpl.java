@@ -12,7 +12,7 @@ public class QuestionsProcessingServiceImpl implements QuestionsProcessingServic
         this.ioService = ioService;
     }
 
-    public boolean askQuestion(Question question, int number){
+    public boolean askQuestion(Question question){
         ioService.printOut("Question №: {"+question.getQuestionNumber()+"}");
         ioService.printOut(question.getQuestion());
 

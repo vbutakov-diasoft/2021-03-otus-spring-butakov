@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 public class ExamProcessingServiceImpl implements ExamProcessingService {
 
     private final InputOutputService ioService;
+    private static final int COUNT_OF_RIGHT_ANSERT_TO_PASS = 3;
 
     public ExamProcessingServiceImpl(InputOutputService ioService) {
         this.ioService = ioService;
@@ -16,7 +17,7 @@ public class ExamProcessingServiceImpl implements ExamProcessingService {
         ioService.printOut(studentName);
         ioService.printOut("Quantity of the correct answers:");
         ioService.printOut(String.valueOf(countRightAnswer));
-        if (countRightAnswer>=3)
+        if (countRightAnswer>=COUNT_OF_RIGHT_ANSERT_TO_PASS)
             ioService.printOut("exam passed");
         else
             ioService.printOut("exam failed");

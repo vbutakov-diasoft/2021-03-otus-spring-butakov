@@ -27,14 +27,12 @@ public class ExamServiceImpl implements ExamService {
         this.examProcessingService = examProcessingService;
     }
 
-    public void testing() throws IOException, CsvValidationException, QuestionsLoadingException {
-        List<Question> questions = new LinkedList<Question>();
-
+    public void testing() throws QuestionsLoadingException {
         Student student = studentService.askStudentName();
-        questions = questionService.findAll();
+        List<Question> questions = questionService.findAll();
         int res = 0;
         for (int i = 0; i < questions.size(); i++) {
-            if (questionsProcessingService.askQuestion(questions.get(i), i + 1)) {
+            if (questionsProcessingService.askQuestion(questions.get(i))) {
                 res++;
             }
         }

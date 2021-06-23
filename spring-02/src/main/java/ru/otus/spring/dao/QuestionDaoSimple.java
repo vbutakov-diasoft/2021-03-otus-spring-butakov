@@ -19,7 +19,6 @@ import ru.otus.spring.exception.QuestionsLoadingException;
 @Repository
 public final class QuestionDaoSimple implements QuestionDao {
 
-    private final List<Question> questions = new LinkedList<Question>();
     private final String fileName;
 
     public QuestionDaoSimple(@Value("${file.name}") String fileName) {
@@ -28,6 +27,7 @@ public final class QuestionDaoSimple implements QuestionDao {
 
     public List<Question> findAll() throws QuestionsLoadingException {
         String localFileName = fileName;
+        List<Question> questions = new LinkedList<>();
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(localFileName)))) {
             char separator = ';';
             CSVParser parser = new CSVParserBuilder().withSeparator(separator)

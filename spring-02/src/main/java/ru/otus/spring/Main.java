@@ -12,7 +12,7 @@ import java.io.*;
 @ComponentScan
 public class Main {
 
-    public static void main(String[] args) throws IOException, CsvValidationException, QuestionsLoadingException {
+    public static void main(String[] args) throws QuestionsLoadingException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         ExamService exam = context.getBean(ExamService.class);
         exam.testing();

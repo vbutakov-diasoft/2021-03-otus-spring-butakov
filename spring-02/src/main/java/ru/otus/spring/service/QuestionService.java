@@ -9,5 +9,5 @@ import java.util.List;
 
 interface QuestionService {
 
-    List<Question> findAll() throws IOException, CsvValidationException, QuestionsLoadingException;
+    List<Question> findAll() throws QuestionsLoadingException;
 }

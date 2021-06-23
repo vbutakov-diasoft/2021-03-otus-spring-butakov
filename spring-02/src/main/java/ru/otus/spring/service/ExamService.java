@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface ExamService {
 
-    void testing() throws IOException, CsvValidationException, QuestionsLoadingException;
+    void testing() throws QuestionsLoadingException;
 }
