@@ -4,30 +4,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.spring.service.BookService;
+import ru.otus.spring.service.ShellService;
 
 @ShellComponent
 @RequiredArgsConstructor
 public class BookShell {
 
-    private final BookService bookService;
+    private final ShellService shellService;
 
     @ShellMethod(value = "Book insert", key = {"Book insert", "bi"})
     public void bookInsert() {
-        bookService.insert();
+        shellService.bookInsert();
     }
 
     @ShellMethod(value = "Book update", key = {"Book update", "bu"})
     public void bookUpdate() {
-        bookService.update();
+        shellService.bookUpdate();
     }
 
     @ShellMethod(value = "Book delete", key = {"Book delete", "bd"})
     public void bookDelete() {
-        bookService.delete();
+        shellService.bookDelete();
     }
 
     @ShellMethod(value = "Book find all", key = {"Book find all", "bf"})
     public void bookFindAll() {
-        bookService.findAll();
+        shellService.bookFindAll();
     }
 }

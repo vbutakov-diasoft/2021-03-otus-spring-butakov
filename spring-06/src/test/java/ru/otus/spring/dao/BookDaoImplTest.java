@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.spring.exception.*;
 
@@ -41,9 +42,9 @@ public class BookDaoImplTest {
     void shouldCorrectInsertBook() throws BookAlreadyExistsException {
         Book newBook = new Book(0L, NEW_BOOK_NAME, new Author(DEFAULT_AUTHOR_ID,""), new Genre(DEFAULT_GENRE_ID, ""));
         Book book = bookDaoImpl.insert(newBook);
-        assertThat(bookDaoImpl.checkExists(newBook)).isEqualTo(true);
+        assertThat(bookDaoImpl.checkExistsByParam(newBook)).isEqualTo(true);
 
-        Book foundBook = bookDaoImpl.findByID(NEW_BOOK_ID).orElse(null);
+        Book foundBook = bookDaoImpl.findByID(NEW_BOOK_ID).orElseThrow(IllegalArgumentException::new);
         Author author = foundBook.getAuthor();
         Genre genre   = foundBook.getGenre();
         assertThat(genre).hasFieldOrPropertyWithValue("genreID", DEFAULT_GENRE_ID);
@@ -55,7 +56,7 @@ public class BookDaoImplTest {
     void shouldCorrectUpdateBook() throws BookNotFoundException {
         Book updBook = new Book(DEFAULT_BOOK_ID, DEFAULT_BOOK_NAME2, new Author(DEFAULT_AUTHOR_ID,""), new Genre(DEFAULT_GENRE_ID, ""));
         bookDaoImpl.update(updBook);
-        Book foundBook = bookDaoImpl.findByID(DEFAULT_BOOK_ID).orElse(null);
+        Book foundBook = bookDaoImpl.findByID(DEFAULT_BOOK_ID).orElseThrow(IllegalArgumentException::new);
         assertThat(foundBook.getTitle()).isEqualTo(DEFAULT_BOOK_NAME2);
     }
 
@@ -64,7 +65,7 @@ public class BookDaoImplTest {
     void shouldCorrectDeleteBook() throws BookNotFoundException{
         Book delBook = new Book(DEFAULT_BOOK_ID, DEFAULT_BOOK_NAME, null, null);
         bookDaoImpl.delete(delBook);
-        assertThat(bookDaoImpl.checkExists(delBook)).isEqualTo(false);
+        assertThat(bookDaoImpl.checkExistsByID(delBook)).isFalse();
     }
 
     @Test
@@ -78,7 +79,7 @@ public class BookDaoImplTest {
     @Test
     @DisplayName("должен правильно находить книгу по идентификатору")
     void shouldFindBookByID() {
-        Book book = bookDaoImpl.findByID(DEFAULT_BOOK_ID).orElse(null);
+        Book book = bookDaoImpl.findByID(DEFAULT_BOOK_ID).orElseThrow(IllegalArgumentException::new);
         assertThat(book.getTitle()).isEqualTo(DEFAULT_BOOK_NAME);
     }
 }

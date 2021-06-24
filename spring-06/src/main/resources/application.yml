@@ -11,3 +11,7 @@ spring:
       path: /h2-console
       settings:
         web-allow-others: true
+
+  messages:
+    basename: i18n.messages
+    fallback-to-system-locale: false

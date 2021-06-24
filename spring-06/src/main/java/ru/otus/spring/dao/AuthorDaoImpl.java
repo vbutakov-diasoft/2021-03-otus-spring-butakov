@@ -84,18 +84,18 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Optional<Author> findByID(Long authorID) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("authorID", authorID);
+        final Map params = Collections.singletonMap("authorID", authorID);
         Author res = namedParameterJdbcOperations.queryForObject(
-                "select * from author where authorID = :authorID", params, new AuthorMapper()
+                "select AUTHORID, NAME from author where authorID = :authorID", params, new AuthorMapper()
         );
         return Optional.ofNullable(res);
     }
 
     @Override
     public List<Author> findByName(String name) {
-        String sql = String.format("select * from author where name = '%s'", name);
-        List<Author> res = namedParameterJdbcOperations.getJdbcOperations().query(sql, new AuthorMapper());
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", name);
+        List<Author> res = namedParameterJdbcOperations.query("select AUTHORID, NAME from author where name = :name",params,new AuthorMapper());
         return res;
     }
 
@@ -105,7 +105,7 @@ public class AuthorDaoImpl implements AuthorDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", author.getName());
         res = namedParameterJdbcOperations.queryForObject(
-                "select count(*) from author where name = :name", params, Integer.class
+                "select count(1) from author where name = :name", params, Integer.class
         );
         return res > 0;
     }
@@ -113,10 +113,9 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public boolean checkExistsByID(Author author) {
         int res = 0;
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("authorID", author.getAuthorID());
+        final Map params = Collections.singletonMap("authorID", author.getAuthorID());
         res = namedParameterJdbcOperations.queryForObject(
-                "select count(*) from author where authorID = :authorID", params, Integer.class
+                "select count(1) from author where authorID = :authorID", params, Integer.class
         );
         return res > 0;
     }

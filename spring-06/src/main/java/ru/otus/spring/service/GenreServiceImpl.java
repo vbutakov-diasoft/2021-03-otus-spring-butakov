@@ -12,18 +12,20 @@ import java.util.List;
 public class GenreServiceImpl implements GenreService{
 
     private final GenreDao genreDao;
-    private final ShellService shellService;
     private final MessageService messageService;
+    private final InputOutputService inputOutputService;
 
-    public GenreServiceImpl(GenreDao genreDao, ShellService shellService, MessageService messageService) {
+    public GenreServiceImpl(GenreDao genreDao, MessageService messageService, InputOutputService inputOutputService) {
         this.genreDao = genreDao;
-        this.shellService = shellService;
+        this.inputOutputService = inputOutputService;
         this.messageService = messageService;
     }
 
     @Override
     public void insert() {
-        Genre genre = shellService.genreInsert();
+        messageService.messagePrintOut("genre.name.input");
+        String name = inputOutputService.readString();
+        Genre genre =  new Genre(0L, name);
         if (genre != null){
             try {
                 genreDao.insert(genre);
@@ -39,7 +41,12 @@ public class GenreServiceImpl implements GenreService{
 
     @Override
     public void update() {
-        Genre genre = shellService.genreUpdate();
+        messageService.messagePrintOut("genre.ID.input");
+        Long id = inputOutputService.readLong();
+        inputOutputService.readString();
+        messageService.messagePrintOut("genre.name.input");
+        String name = inputOutputService.readString();
+        Genre genre = new Genre(id, name);
         if (genre != null){
             try {
                 genreDao.update(genre);
@@ -56,7 +63,9 @@ public class GenreServiceImpl implements GenreService{
 
     @Override
     public void delete() {
-        Genre genre = shellService.genreDelete();
+        messageService.messagePrintOut("genre.ID.input");
+        Long id = inputOutputService.readLong();
+        Genre genre = new Genre(id, "");
         if (genre.getGenreID() > 0){
             try {
                 genreDao.delete(genre);
@@ -74,7 +83,19 @@ public class GenreServiceImpl implements GenreService{
     @Override
     public void findAll() {
         List<Genre> list = genreDao.findAll();
-        shellService.genreListOutput(list);
+        if (list.size() == 0) {
+            messageService.messagePrintOut("genre.list.empty");
+            return;
+        }
+
+        for(int i = 0; i < list.size(); i++) {
+            Genre genre = list.get(i);
+            String message = messageService.getMessage("genre.ID.output")
+                    + String.valueOf(genre.getGenreID()) + "; "
+                    + messageService.getMessage("genre.name.output")
+                    + genre.getName();
+            inputOutputService.printOut(message);
+        }
     }
 
 }

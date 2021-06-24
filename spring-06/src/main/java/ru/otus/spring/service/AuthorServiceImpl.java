@@ -12,18 +12,20 @@ import java.util.List;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorDao authorDao;
-    private final ShellService shellService;
     private final MessageService messageService;
+    private final InputOutputService inputOutputService;
 
-    public AuthorServiceImpl(AuthorDao authorDao, ShellService shellService, MessageService messageService) {
+    public AuthorServiceImpl(AuthorDao authorDao, MessageService messageService, InputOutputService inputOutputService) {
         this.authorDao = authorDao;
-        this.shellService = shellService;
         this.messageService = messageService;
+        this.inputOutputService = inputOutputService;
     }
 
     @Override
     public void insert() {
-        Author author = shellService.authorInsert();
+        messageService.messagePrintOut("author.name.input");
+        String name = inputOutputService.readString();
+        Author author = new Author(0L, name);
         if (author != null){
             try {
                 authorDao.insert(author);
@@ -39,7 +41,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void update() {
-        Author author = shellService.authorUpdate();
+        messageService.messagePrintOut("author.ID.input");
+        Long id = inputOutputService.readLong();
+        inputOutputService.readString();
+        messageService.messagePrintOut("author.name.input");
+        String name = inputOutputService.readString();
+        Author author = new Author(id, name);
         if (author != null){
             try {
                 authorDao.update(author);
@@ -55,7 +62,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void delete() {
-        Author author = shellService.authorDelete();
+        messageService.messagePrintOut("author.ID.input");
+        Long id = inputOutputService.readLong();
+        Author author = new Author(id, "");
         if (author.getAuthorID() > 0){
             try {
                 authorDao.delete(author);
@@ -72,6 +81,18 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void findAll() {
         List<Author> list = authorDao.findAll();
-        shellService.authorListOutput(list);
+        if (list.size() == 0) {
+            messageService.messagePrintOut("author.list.empty");
+            return;
+        }
+
+        for(int i = 0; i < list.size(); i++) {
+            Author author = list.get(i);
+            String message = messageService.getMessage("author.ID.output")
+                    + String.valueOf(author.getAuthorID()) + "; "
+                    + messageService.getMessage("author.name.output")
+                    + author.getName();
+            inputOutputService.printOut(message);
+        }
     }
 }

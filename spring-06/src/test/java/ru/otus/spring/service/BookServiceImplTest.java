@@ -63,17 +63,17 @@ public class BookServiceImplTest {
     @DisplayName("должен корректно добавлять в базу книгу")
     void shouldCorrectInsertBook() throws BookAlreadyExistsException{
 
-        Mockito.when(shellService.bookAuthorNameInput()).thenReturn(DEFAULT_AUTHOR_NAME);
+        Mockito.when(bookService.bookAuthorNameInput()).thenReturn(DEFAULT_AUTHOR_NAME);
         Author author = new Author(DEFAULT_AUTHOR_ID, DEFAULT_AUTHOR_NAME);
         Mockito.when(authorDao.findByName(anyString())).thenReturn(Collections.singletonList(author));
 
         Genre genre = new Genre(DEFAULT_GENRE_ID, DEFAULT_GENRE_NAME);
         Mockito.when(genreDao.findByName(any())).thenReturn(Collections.singletonList(genre));
 
-        Mockito.when(shellService.bookTitleInput()).thenReturn(DEFAULT_BOOK_NAME);
+        Mockito.when(bookService.bookTitleInput()).thenReturn(DEFAULT_BOOK_NAME);
         Book book = new Book(DEFAULT_BOOK_ID, DEFAULT_BOOK_NAME, author, genre);
 
-        bookService.insert();
+        shellService.bookInsert();
 
         ArgumentCaptor<Book> argument = ArgumentCaptor.forClass(Book.class);
 

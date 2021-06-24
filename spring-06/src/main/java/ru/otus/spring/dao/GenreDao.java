@@ -16,5 +16,6 @@ public interface GenreDao {
     List<Genre> findAll();
     Optional<Genre> findByID(Long genreID);
     List<Genre> findByName(String name);
-    boolean checkExists(Genre genre);
+    boolean checkExistsByID(Genre genre);
+    boolean checkExistsByName(Genre genre);
 }

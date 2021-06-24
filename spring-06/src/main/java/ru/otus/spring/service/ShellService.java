@@ -10,27 +10,23 @@ public interface ShellService {
 
     // Shell service for Author
 
-    Author authorInsert();
-    Author authorUpdate();
-    Author authorDelete();
-
-    void authorListOutput(List<Author> list);
+    void authorInsert();
+    void authorUpdate();
+    void authorDelete();
+    void authorFindAll();
 
     // Shell service for Genre
 
-    Genre genreInsert();
-    Genre genreUpdate();
-    Genre genreDelete();
-
-    void genreListOutput(List<Genre> list);
+    void genreInsert();
+    void genreUpdate();
+    void genreDelete();
+    void genreFindAll();
 
     // Shell service for Book
 
-    String bookAuthorNameInput();
-    String bookGenreNameInput();
-    String bookTitleInput();
-    Long bookIDInput();
+    void bookInsert();
+    void bookUpdate();
+    void bookDelete();
+    void bookFindAll();
 
-    void bookOutput(Book book);
-    void bookListOutput(List<Book> list);
 }

@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Genre;
-import ru.otus.spring.exception.BookNotFoundException;
 import ru.otus.spring.exception.GenreAlreadyExistsException;
 import ru.otus.spring.exception.GenreNotFoundException;
 
@@ -27,8 +26,8 @@ public class GenreDaoImpl implements GenreDao {
 
         @Override
         public Genre mapRow(ResultSet resultSet, int i) throws SQLException {
-            Long genreID  = resultSet.getLong("genreID");
-            String name    = resultSet.getString("name");
+            Long genreID = resultSet.getLong("genreID");
+            String name = resultSet.getString("name");
             return new Genre(genreID, name);
         }
     }
@@ -36,7 +35,7 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public Genre insert(Genre genre) throws GenreAlreadyExistsException {
-        if (checkExists(genre)){
+        if (checkExistsByName(genre)) {
             throw new GenreAlreadyExistsException("Жанр " + genre.getName() + " уже добавлен в базу!");
         }
 
@@ -53,10 +52,10 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public void update(Genre genre) throws GenreNotFoundException {
-        if (!checkExists(genre)) {
-            throw new GenreNotFoundException(" Жанр с ID="+ genre.getName() +" не найден в базе!");
+        if (!checkExistsByID(genre)) {
+            throw new GenreNotFoundException(" Жанр с ID=" + genre.getName() + " не найден в базе!");
         }
-        if (checkExists(genre)){
+        else {
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("GenreID", genre.getGenreID());
             params.addValue("name", genre.getName());
@@ -69,10 +68,10 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public void delete(Genre genre) throws GenreNotFoundException {
-        if (!checkExists(genre)) {
-            throw new GenreNotFoundException(" Жанр с ID="+ genre.getName() +" не найден в базе!");
+        if (!checkExistsByID(genre)) {
+            throw new GenreNotFoundException(" Жанр с ID=" + genre.getName() + " не найден в базе!");
         }
-        if (checkExists(genre)){
+        else {
             Map<String, Object> params = Collections.singletonMap("genreID", genre.getGenreID());
             namedParameterJdbcOperations.update(
                     "delete from genre where genreID = :genreID", params
@@ -83,42 +82,45 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public List<Genre> findAll() {
         return namedParameterJdbcOperations.getJdbcOperations().query(
-                "select * from genre", new GenreMapper()
+                "select GENREID, NAME from genre", new GenreMapper()
         );
     }
 
     @Override
     public Optional<Genre> findByID(Long genreID) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("genreID", genreID);
+        final Map params = Collections.singletonMap("genreID", genreID);
         Genre res = namedParameterJdbcOperations.queryForObject(
-                "select * from genre where genreID = :genreID", params, new GenreMapper()
+                "select GENREID, NAME from genre where genreID = :genreID", params, new GenreMapper()
         );
         return Optional.ofNullable(res);
     }
 
     @Override
     public List<Genre> findByName(String name) {
-        String sql = String.format("select * from genre where name = '%s'", name);
-        List<Genre> res = namedParameterJdbcOperations.getJdbcOperations().query(sql, new GenreMapper());
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", name);
+        List<Genre> res = namedParameterJdbcOperations.query("select GENREID, NAME from genre where name = :name",params,new GenreMapper());
         return res;
     }
 
     @Override
-    public boolean checkExists(Genre genre) {
+    public boolean checkExistsByID(Genre genre) {
+        int res = 0;
+        final Map params = Collections.singletonMap("genreID", genre.getGenreID());
+        res = namedParameterJdbcOperations.queryForObject(
+                "select count(1) from genre where genreID = :genreID", params, Integer.class
+        );
+        return res > 0;
+    }
+
+    @Override
+    public boolean checkExistsByName(Genre genre) {
         int res = 0;
         MapSqlParameterSource params = new MapSqlParameterSource();
-        if (genre.getGenreID() > 0 ){
-            params.addValue("genreID", genre.getGenreID());
-            res =  namedParameterJdbcOperations.queryForObject(
-                    "select count(*) from genre where genreID = :genreID", params, Integer.class
-            );
-        } else {
-            params.addValue("name", genre.getName());
-            res =  namedParameterJdbcOperations.queryForObject(
-                    "select count(*) from genre where name = :name", params, Integer.class
-            );
-        }
-        return res>0;
+        params.addValue("name", genre.getName());
+        res = namedParameterJdbcOperations.queryForObject(
+                "select count(1) from genre where name = :name", params, Integer.class
+        );
+        return res > 0;
     }
 }

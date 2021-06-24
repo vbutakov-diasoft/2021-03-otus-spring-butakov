@@ -5,4 +5,7 @@ public interface BookService {
     void update();
     void delete();
     void findAll();
+
+    String bookAuthorNameInput();
+    String bookTitleInput();
 }

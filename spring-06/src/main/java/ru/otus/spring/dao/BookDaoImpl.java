@@ -28,11 +28,11 @@ public class BookDaoImpl implements BookDao {
 
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
-            Long bookID       = resultSet.getLong("bookID");
-            String title      = resultSet.getString("title");
-            Long genreID      = resultSet.getLong("genre.GenreID");
-            String genreName  = resultSet.getString("genre.Name");
-            Long authorID     = resultSet.getLong("author.AuthorID");
+            Long bookID = resultSet.getLong("bookID");
+            String title = resultSet.getString("title");
+            Long genreID = resultSet.getLong("genre.GenreID");
+            String genreName = resultSet.getString("genre.Name");
+            Long authorID = resultSet.getLong("author.AuthorID");
             String authorName = resultSet.getString("author.Name");
             return new Book(bookID, title, new Author(authorID, authorName), new Genre(genreID, genreName));
         }
@@ -40,7 +40,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book insert(Book book) throws BookAlreadyExistsException {
-        if (checkExists(book)){
+        if (checkExistsByParam(book)) {
             throw new BookAlreadyExistsException(" Книга " + book.getTitle() + " уже добавлена в базу!");
         }
 
@@ -48,6 +48,7 @@ public class BookDaoImpl implements BookDao {
         params.addValue("title", book.getTitle());
         params.addValue("genreID", book.getGenre().getGenreID());
         params.addValue("authorID", book.getAuthor().getAuthorID());
+
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         namedParameterJdbcOperations.update(
                 "insert into book (title, genreID, authorID) values (:title, :genreID, :authorID)", params, key
@@ -58,9 +59,9 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void update(Book book)  throws BookNotFoundException {
-        if (!checkExists(book)) {
-            throw new BookNotFoundException(" Книга с ID="+ book.getBookID() +" не найдена в базе!");
+    public void update(Book book) throws BookNotFoundException {
+        if (!checkExistsByID(book)) {
+            throw new BookNotFoundException(" Книга с ID=" + book.getBookID() + " не найдена в базе!");
         }
 
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -75,9 +76,9 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void delete(Book book)  throws BookNotFoundException {
-        if (!checkExists(book)){
-            throw new BookNotFoundException(" Книга с ID="+ book.getBookID() +" не найдена в базе!");
+    public void delete(Book book) throws BookNotFoundException {
+        if (!checkExistsByID(book)) {
+            throw new BookNotFoundException(" Книга с ID=" + book.getBookID() + " не найдена в базе!");
         }
 
         Map<String, Object> params = Collections.singletonMap("bookID", book.getBookID());
@@ -100,13 +101,12 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Optional<Book> findByID(Long bookID) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("bookID", bookID);
+        final Map params = Collections.singletonMap("bookID", bookID);
         Book res = namedParameterJdbcOperations.queryForObject(
                 "select book.bookID, book.title, author.name, author.authorID, genre.name, genre.genreID\n" +
                         "from book \n" +
                         "inner join author on author.authorID = book.authorID\n" +
-                        "inner join genre on genre.genreID = book.genreID\n"+
+                        "inner join genre on genre.genreID = book.genreID\n" +
                         "where bookID = :bookID", params, new BookMapper()
         );
         return Optional.ofNullable(res);
@@ -114,7 +114,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> findBookByParam(Long authorID, Long genreID, String title) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("title", title);
         params.put("genreID", genreID);
         params.put("authorID", authorID);
@@ -122,29 +122,32 @@ public class BookDaoImpl implements BookDao {
                 "select book.bookID, book.title, author.name, author.authorID, genre.name, genre.genreID\n" +
                         "from book \n" +
                         "inner join author on author.authorID = book.authorID\n" +
-                        "inner join genre on genre.genreID = book.genreID\n"+
-                        "where book.title = :title and book.genreID = :genreID and book.authorID = :authorID", params,  new BookMapper());
+                        "inner join genre on genre.genreID = book.genreID\n" +
+                        "where book.title = :title and book.genreID = :genreID and book.authorID = :authorID", params, new BookMapper());
         return res;
     }
 
     @Override
-    public boolean checkExists(Book book) {
+    public boolean checkExistsByParam(Book book) {
         Integer res = 0;
         MapSqlParameterSource params = new MapSqlParameterSource();
-        if (book.getBookID() != 0){
-            params.addValue("bookID", book.getBookID());
-            res =  namedParameterJdbcOperations.queryForObject(
-                    "select count(*) from book where bookID = :bookID", params, Integer.class
+        params.addValue("title", book.getTitle());
+        params.addValue("genreID", book.getGenre().getGenreID());
+        params.addValue("authorID", book.getAuthor().getAuthorID());
+        res = namedParameterJdbcOperations.queryForObject(
+                "select count(1) from book where title = :title and genreID = :genreID and authorID = :authorID", params, Integer.class
+        );
+        return res > 0;
+    }
+
+    @Override
+    public boolean checkExistsByID(Book book) {
+        Integer res = 0;
+        final Map params = Collections.singletonMap("bookID", book.getBookID());
+            res = namedParameterJdbcOperations.queryForObject(
+                    "select count(1) from book where bookID = :bookID", params, Integer.class
             );
-        } else {
-            params.addValue("title", book.getTitle());
-            params.addValue("genreID", book.getGenre().getGenreID());
-            params.addValue("authorID", book.getAuthor().getAuthorID());
-            res =  namedParameterJdbcOperations.queryForObject(
-                    "select count(*) from book where title = :title and genreID = :genreID and authorID = :authorID", params, Integer.class
-            );
-        }
-        return res>0;
+        return res > 0;
     }
 }
 

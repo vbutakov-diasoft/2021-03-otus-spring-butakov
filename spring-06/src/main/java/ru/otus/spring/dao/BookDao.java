@@ -17,5 +17,6 @@ public interface BookDao {
     Optional<Book> findByID(Long bookID);
     List<Book> findBookByParam(Long authorID, Long genreID, String title);
 
-    boolean checkExists(Book book);
+    boolean checkExistsByParam(Book book);
+    boolean checkExistsByID(Book book);
 }

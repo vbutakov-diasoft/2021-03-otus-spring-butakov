@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 @Data
-@Configuration
-@EnableConfigurationProperties
-@ConfigurationProperties("application")
 @Component
 public class AppSettings {
 

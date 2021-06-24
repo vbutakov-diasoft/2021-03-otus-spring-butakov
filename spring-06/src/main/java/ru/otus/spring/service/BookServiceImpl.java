@@ -21,20 +21,20 @@ public class BookServiceImpl implements BookService{
     private final BookDao bookDao;
     private final AuthorDao authorDao;
     private final GenreDao genreDao;
-    private final ShellService shellService;
     private final MessageService messageService;
+    private final InputOutputService inputOutputService;
 
-    public BookServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, ShellService shellService, MessageService messageService) {
+    public BookServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, MessageService messageService, InputOutputService inputOutputService) {
         this.bookDao = bookDao;
         this.authorDao = authorDao;
         this.genreDao = genreDao;
-        this.shellService = shellService;
+        this.inputOutputService = inputOutputService;
         this.messageService = messageService;
     }
 
     private Optional<Author> getAuthor(){
         Author author = null;
-        String authorName = shellService.bookAuthorNameInput();
+        String authorName = bookAuthorNameInput();
         List<Author> authors = authorDao.findByName(authorName);
         if (authors.size() > 1) {
             messageService.messagePrintOut("book.error.foundToManyAuthors");
@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService{
 
     private Optional<Genre> getGenre(){
         Genre genre = null;
-        String genreName = shellService.bookGenreNameInput();
+        String genreName = bookAuthorNameInput();
         List<Genre> genres = genreDao.findByName(genreName);
         if (genres.size() > 1) {
             messageService.messagePrintOut("book.error.foundToManyGenres");
@@ -82,7 +82,7 @@ public class BookServiceImpl implements BookService{
         if (genre == null)
             return;
 
-        String title = shellService.bookTitleInput();
+        String title = bookTitleInput();
         Book book = new Book(0L, title, author, genre);
         try {
             bookDao.insert(book);
@@ -94,13 +94,22 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public void update() {
-        Long bookID = shellService.bookIDInput();
-        if (!bookDao.checkExists(new Book(bookID, null, null, null))){
+        messageService.messagePrintOut("book.ID.input");
+        Long bookID = inputOutputService.readLong();
+        if (!bookDao.checkExistsByID(new Book(bookID, null, null, null))){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
         Book book = bookDao.findByID(bookID).orElse(null);
-        shellService.bookOutput(book);
+        String message = messageService.getMessage("book.ID.output")
+                + String.valueOf(book.getBookID()) + "; "
+                + messageService.getMessage("book.title.output")
+                + book.getTitle() + "; "
+                + messageService.getMessage("book.authorName.output")
+                + book.getAuthor().getName() + "; "
+                + messageService.getMessage("book.genreName.output")
+                + book.getGenre().getName()+ "; ";
+        inputOutputService.printOut(message);
 
         Author author = getAuthor().orElse(null);
         if (author == null)
@@ -110,7 +119,7 @@ public class BookServiceImpl implements BookService{
         if (genre == null)
             return;
 
-        String title = shellService.bookTitleInput();
+        String title = bookTitleInput();
         Book newBook = new Book(bookID, title, author, genre);
         try {
             bookDao.update(newBook);
@@ -122,8 +131,9 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public void delete() {
-        Long bookID = shellService.bookIDInput();
-        if (!bookDao.checkExists(new Book(bookID, null, null, null))){
+        messageService.messagePrintOut("book.ID.input");
+        Long bookID = inputOutputService.readLong();
+        if (!bookDao.checkExistsByID(new Book(bookID, null, null, null))){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
@@ -140,6 +150,34 @@ public class BookServiceImpl implements BookService{
     @Override
     public void findAll() {
         List<Book> list = bookDao.findAll();
-        shellService.bookListOutput(list);
+        if (list.size() == 0) {
+            messageService.messagePrintOut("book.list.empty");
+            return;
+        }
+
+        for(int i = 0; i < list.size(); i++) {
+            Book book = list.get(i);
+            String message = messageService.getMessage("book.ID.output")
+                    + String.valueOf(book.getBookID()) + "; "
+                    + messageService.getMessage("book.title.output")
+                    + book.getTitle() + "; "
+                    + messageService.getMessage("book.authorName.output")
+                    + book.getAuthor().getName() + "; "
+                    + messageService.getMessage("book.genreName.output")
+                    + book.getGenre().getName()+ "; ";
+            inputOutputService.printOut(message);
+        }
+    }
+
+    @Override
+    public String bookAuthorNameInput() {
+        messageService.messagePrintOut("book.authorName.input");
+        return inputOutputService.readString();
+    }
+
+    @Override
+    public String bookTitleInput() {
+        messageService.messagePrintOut("book.title.input");
+        return inputOutputService.readString();
     }
 }
