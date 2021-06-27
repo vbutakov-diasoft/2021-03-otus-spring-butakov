@@ -78,13 +78,13 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public List<Author> findAll() {
         return namedParameterJdbcOperations.getJdbcOperations().query(
-                "select * from author", new AuthorMapper()
+                "select AUTHORID, NAME from author", new AuthorMapper()
         );
     }
 
     @Override
     public Optional<Author> findByID(Long authorID) {
-        final Map params = Collections.singletonMap("authorID", authorID);
+        final Map<String, Object> params = Collections.singletonMap("authorID", authorID);
         Author res = namedParameterJdbcOperations.queryForObject(
                 "select AUTHORID, NAME from author where authorID = :authorID", params, new AuthorMapper()
         );

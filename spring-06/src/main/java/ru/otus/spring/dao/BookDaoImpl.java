@@ -129,7 +129,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public boolean checkExistsByParam(Book book) {
-        Integer res = 0;
+        int res = 0;
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("title", book.getTitle());
         params.addValue("genreID", book.getGenre().getGenreID());
@@ -142,7 +142,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public boolean checkExistsByID(Book book) {
-        Integer res = 0;
+        int res = 0;
         final Map params = Collections.singletonMap("bookID", book.getBookID());
             res = namedParameterJdbcOperations.queryForObject(
                     "select count(1) from book where bookID = :bookID", params, Integer.class

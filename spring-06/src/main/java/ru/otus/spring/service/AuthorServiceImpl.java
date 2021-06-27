@@ -26,16 +26,11 @@ public class AuthorServiceImpl implements AuthorService {
         messageService.messagePrintOut("author.name.input");
         String name = inputOutputService.readString();
         Author author = new Author(0L, name);
-        if (author != null){
-            try {
-                authorDao.insert(author);
-                messageService.messagePrintOut("author.success.insert", new Object[] {author.getAuthorID(), author.getName()});
-            } catch (AuthorAlreadyExistsException e) {
-                messageService.messagePrintOut("author.error.insert", e.getMessage());
-            }
-        }
-        else{
-            messageService.messagePrintOut("author.error.insert");
+        try {
+            authorDao.insert(author);
+            messageService.messagePrintOut("author.success.insert", new Object[]{author.getAuthorID(), author.getName()});
+        } catch (AuthorAlreadyExistsException e) {
+            messageService.messagePrintOut("author.error.insert", e.getMessage());
         }
     }
 
@@ -47,15 +42,14 @@ public class AuthorServiceImpl implements AuthorService {
         messageService.messagePrintOut("author.name.input");
         String name = inputOutputService.readString();
         Author author = new Author(id, name);
-        if (author != null){
+        if (author != null) {
             try {
                 authorDao.update(author);
-                messageService.messagePrintOut("author.success.update", new Object[] {author.getAuthorID(), author.getName()});
+                messageService.messagePrintOut("author.success.update", new Object[]{author.getAuthorID(), author.getName()});
             } catch (AuthorNotFoundException e) {
                 messageService.messagePrintOut("author.error.update", e.getMessage());
             }
-        }
-        else{
+        } else {
             messageService.messagePrintOut("author.error.update");
         }
     }
@@ -65,15 +59,14 @@ public class AuthorServiceImpl implements AuthorService {
         messageService.messagePrintOut("author.ID.input");
         Long id = inputOutputService.readLong();
         Author author = new Author(id, "");
-        if (author.getAuthorID() > 0){
+        if (author.getAuthorID() > 0) {
             try {
                 authorDao.delete(author);
-                messageService.messagePrintOut("author.success.delete", new Object[] {author.getAuthorID()});
+                messageService.messagePrintOut("author.success.delete", new Object[]{author.getAuthorID()});
             } catch (AuthorNotFoundException e) {
                 messageService.messagePrintOut("author.error.delete", e.getMessage());
             }
-        }
-        else{
+        } else {
             messageService.messagePrintOut("author.error.delete");
         }
     }
@@ -86,7 +79,7 @@ public class AuthorServiceImpl implements AuthorService {
             return;
         }
 
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             Author author = list.get(i);
             String message = messageService.getMessage("author.ID.output")
                     + String.valueOf(author.getAuthorID()) + "; "

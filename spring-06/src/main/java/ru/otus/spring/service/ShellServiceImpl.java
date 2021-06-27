@@ -8,15 +8,11 @@ import java.util.List;
 @Service
 public class ShellServiceImpl implements ShellService{
 
-    private final InputOutputService inputOutputService;
-    private final MessageService messageService;
     private final AuthorService authorService;
     private final GenreService genreService;
     private final BookService bookService;
 
-    public ShellServiceImpl(InputOutputService inputOutputService, MessageService messageService, AuthorService authorService, GenreService genreService, BookService bookService) {
-        this.inputOutputService = inputOutputService;
-        this.messageService = messageService;
+    public ShellServiceImpl(AuthorService authorService, GenreService genreService, BookService bookService) {
         this.authorService = authorService;
         this.genreService = genreService;
         this.bookService = bookService;

@@ -9,7 +9,7 @@ import ru.otus.spring.exception.GenreNotFoundException;
 import java.util.List;
 
 @Service
-public class GenreServiceImpl implements GenreService{
+public class GenreServiceImpl implements GenreService {
 
     private final GenreDao genreDao;
     private final MessageService messageService;
@@ -25,17 +25,12 @@ public class GenreServiceImpl implements GenreService{
     public void insert() {
         messageService.messagePrintOut("genre.name.input");
         String name = inputOutputService.readString();
-        Genre genre =  new Genre(0L, name);
-        if (genre != null){
-            try {
-                genreDao.insert(genre);
-                messageService.messagePrintOut("genre.success.insert", new Object[] {genre.getGenreID(), genre.getName()});
-            } catch (GenreAlreadyExistsException e) {
-                messageService.messagePrintOut("genre.error.insert", e.getMessage());
-            }
-        }
-        else{
-            messageService.messagePrintOut("genre.error.insert");
+        Genre genre = new Genre(0L, name);
+        try {
+            genreDao.insert(genre);
+            messageService.messagePrintOut("genre.success.insert", new Object[]{genre.getGenreID(), genre.getName()});
+        } catch (GenreAlreadyExistsException e) {
+            messageService.messagePrintOut("genre.error.insert", e.getMessage());
         }
     }
 
@@ -47,16 +42,14 @@ public class GenreServiceImpl implements GenreService{
         messageService.messagePrintOut("genre.name.input");
         String name = inputOutputService.readString();
         Genre genre = new Genre(id, name);
-        if (genre != null){
+        if (genre != null) {
             try {
                 genreDao.update(genre);
-                messageService.messagePrintOut("genre.success.update", new Object[] {genre.getGenreID(), genre.getName()});
-            }
-            catch (GenreNotFoundException e) {
+                messageService.messagePrintOut("genre.success.update", new Object[]{genre.getGenreID(), genre.getName()});
+            } catch (GenreNotFoundException e) {
                 messageService.messagePrintOut("genre.error.update", e.getMessage());
             }
-        }
-        else{
+        } else {
             messageService.messagePrintOut("genre.error.update");
         }
     }
@@ -66,16 +59,14 @@ public class GenreServiceImpl implements GenreService{
         messageService.messagePrintOut("genre.ID.input");
         Long id = inputOutputService.readLong();
         Genre genre = new Genre(id, "");
-        if (genre.getGenreID() > 0){
+        if (genre.getGenreID() > 0) {
             try {
                 genreDao.delete(genre);
                 messageService.messagePrintOut("genre.success.delete", new Object[]{genre.getGenreID()});
-            }
-            catch (GenreNotFoundException e) {
+            } catch (GenreNotFoundException e) {
                 messageService.messagePrintOut("genre.error.delete", e.getMessage());
             }
-        }
-        else{
+        } else {
             messageService.messagePrintOut("genre.error.delete");
         }
     }
@@ -88,7 +79,7 @@ public class GenreServiceImpl implements GenreService{
             return;
         }
 
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             Genre genre = list.get(i);
             String message = messageService.getMessage("genre.ID.output")
                     + String.valueOf(genre.getGenreID()) + "; "
