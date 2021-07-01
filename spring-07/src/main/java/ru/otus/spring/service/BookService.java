@@ -9,5 +9,6 @@ public interface BookService {
     void findAll();
 
     String bookAuthorNameInput();
+    String bookGenreNameInput();
     String bookTitleInput();
 }

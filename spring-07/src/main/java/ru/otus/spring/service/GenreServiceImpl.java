@@ -1,6 +1,7 @@
 package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.dao.GenreDao;
 import ru.otus.spring.domain.Genre;
 import ru.otus.spring.exception.GenreAlreadyExistsException;
@@ -21,6 +22,7 @@ public class GenreServiceImpl implements GenreService {
         this.messageService = messageService;
     }
 
+    @Transactional
     @Override
     public void insert() {
         messageService.messagePrintOut("genre.name.input");
@@ -34,6 +36,7 @@ public class GenreServiceImpl implements GenreService {
         }
     }
 
+    @Transactional
     @Override
     public void update() {
         messageService.messagePrintOut("genre.ID.input");
@@ -54,6 +57,7 @@ public class GenreServiceImpl implements GenreService {
         }
     }
 
+    @Transactional
     @Override
     public void delete() {
         messageService.messagePrintOut("genre.ID.input");

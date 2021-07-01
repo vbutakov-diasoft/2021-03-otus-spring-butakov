@@ -1,6 +1,7 @@
 package ru.otus.spring.dao;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.domain.Author;
 import ru.otus.spring.exception.AuthorAlreadyExistsException;
 import ru.otus.spring.exception.AuthorNotFoundException;

@@ -1,5 +1,6 @@
 package ru.otus.spring.service;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.dao.BookCommentDao;
 import ru.otus.spring.domain.Book;
@@ -10,6 +11,7 @@ import ru.otus.spring.exception.BookCommentNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class BookCommentServiceImpl implements BookCommentService {
 
     private final BookDao bookDao;
@@ -24,26 +26,28 @@ public class BookCommentServiceImpl implements BookCommentService {
         this.bookCommentDao = bookCommentDao;
     }
 
+    @Transactional
     @Override
     public void insert() {
         Long bookID = bookIDInput();
-        Optional<Book> book = bookDao.findByID(bookID);
-        if (!book.isPresent()){
+        if (!bookDao.checkExistsByID(new Book(bookID, null, null, null))){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
+        Optional<Book> book = bookDao.findByID(bookID);
         String remark = bookCommentCommentInput();
         bookCommentDao.insert(new BookComment(0L, book.get(), remark));
     }
 
+    @Transactional
     @Override
     public void update() throws BookCommentNotFoundException {
         Long bookID = bookIDInput();
-        Optional<Book> book = bookDao.findByID(bookID);
-        if (!book.isPresent()){
+        if (!bookDao.checkExistsByID(new Book(bookID, null, null, null))){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
+        Optional<Book> book = bookDao.findByID(bookID);
         List<BookComment> list = bookCommentDao.findByBookId(bookID);
         bookCommentListOutput(list);
         Long commentID = bookCommentIDInput();
@@ -57,14 +61,15 @@ public class BookCommentServiceImpl implements BookCommentService {
         bookCommentDao.update(bookComment.get());
     }
 
+    @Transactional
     @Override
     public void delete() throws BookCommentNotFoundException {
         Long bookID = bookIDInput();
-        Optional<Book> book = bookDao.findByID(bookID);
-        if (!book.isPresent()){
+        if (!bookDao.checkExistsByID(new Book(bookID, null, null, null))){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
+        Optional<Book> book = bookDao.findByID(bookID);
         List<BookComment> list = bookCommentDao.findByBookId(bookID);
         bookCommentListOutput(list);
         Long commentID = bookCommentIDInput();
@@ -77,14 +82,13 @@ public class BookCommentServiceImpl implements BookCommentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public void findByBook() {
         Long bookID = bookIDInput();
-        Optional<Book> book = bookDao.findByID(bookID);
-        if (!book.isPresent()){
+        if (!bookDao.checkExistsByID(new Book(bookID, null, null, null))){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
+        Optional<Book> book = bookDao.findByID(bookID);
         List<BookComment> list = bookCommentDao.findByBookId(bookID);
         bookCommentListOutput(list);
     }
@@ -93,7 +97,6 @@ public class BookCommentServiceImpl implements BookCommentService {
     public Long bookIDInput() {
         messageService.messagePrintOut("book.ID.input");
         Long bookID = inputOutputService.readLong();
-        inputOutputService.readString();
         return bookID;
     }
 

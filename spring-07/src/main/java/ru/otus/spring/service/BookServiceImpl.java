@@ -1,6 +1,7 @@
 package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.dao.AuthorDao;
 import ru.otus.spring.dao.BookDao;
 import ru.otus.spring.dao.GenreDao;
@@ -54,7 +55,7 @@ public class BookServiceImpl implements BookService{
 
     private Optional<Genre> getGenre(){
         Genre genre = null;
-        String genreName = bookAuthorNameInput();
+        String genreName = bookGenreNameInput();
         List<Genre> genres = genreDao.findByName(genreName);
         if (genres.size() > 1) {
             messageService.messagePrintOut("book.error.foundToManyGenres");
@@ -72,6 +73,7 @@ public class BookServiceImpl implements BookService{
         return Optional.ofNullable(genre);
     }
 
+    @Transactional
     @Override
     public void insert() {
         Author author = getAuthor().orElse(null);
@@ -92,6 +94,7 @@ public class BookServiceImpl implements BookService{
         }
     }
 
+    @Transactional
     @Override
     public void update() {
         messageService.messagePrintOut("book.ID.input");
@@ -129,6 +132,7 @@ public class BookServiceImpl implements BookService{
         }
     }
 
+    @Transactional
     @Override
     public void delete() {
         messageService.messagePrintOut("book.ID.input");
@@ -172,6 +176,12 @@ public class BookServiceImpl implements BookService{
     @Override
     public String bookAuthorNameInput() {
         messageService.messagePrintOut("book.authorName.input");
+        return inputOutputService.readString();
+    }
+
+    @Override
+    public String bookGenreNameInput() {
+        messageService.messagePrintOut("book.genreName.input");
         return inputOutputService.readString();
     }
 

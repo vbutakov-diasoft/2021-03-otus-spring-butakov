@@ -3,6 +3,9 @@ package ru.otus.spring.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 
@@ -22,11 +25,15 @@ public class Book {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
-    @ManyToOne//(targetEntity = Author.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 5)
+    @ManyToOne(targetEntity = Author.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "authorID")
     private Author author;
 
-    @ManyToOne//(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 5)
+    @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
     @JoinColumn(name = "genreID")
     private Genre genre;
 

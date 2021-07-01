@@ -1,5 +1,7 @@
 package ru.otus.spring.dao;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.domain.BookComment;
 import ru.otus.spring.exception.BookCommentNotFoundException;
 
@@ -10,7 +12,8 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
-public class BookCommentDaoImpl implements BookCommentDao {
+@Repository
+public class BookCommentDaoJpa implements BookCommentDao {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -42,7 +45,7 @@ public class BookCommentDaoImpl implements BookCommentDao {
 
     @Override
     public List<BookComment> findByBookId(Long BookID) {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("CommentWithBook");
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("BookCommentWithBook");
         TypedQuery<BookComment> query = entityManager.createQuery(
                 "select c from BookComment c join fetch c.book b where b.bookID = :bookID", BookComment.class);
         query.setParameter("bookID", BookID);

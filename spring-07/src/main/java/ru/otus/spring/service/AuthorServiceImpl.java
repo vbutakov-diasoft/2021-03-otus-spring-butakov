@@ -1,6 +1,7 @@
 package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.dao.AuthorDao;
 import ru.otus.spring.domain.Author;
 import ru.otus.spring.exception.AuthorAlreadyExistsException;
@@ -21,6 +22,7 @@ public class AuthorServiceImpl implements AuthorService {
         this.inputOutputService = inputOutputService;
     }
 
+    @Transactional
     @Override
     public void insert() {
         messageService.messagePrintOut("author.name.input");
@@ -34,11 +36,11 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
+    @Transactional
     @Override
     public void update() {
         messageService.messagePrintOut("author.ID.input");
         Long id = inputOutputService.readLong();
-        inputOutputService.readString();
         messageService.messagePrintOut("author.name.input");
         String name = inputOutputService.readString();
         Author author = new Author(id, name);
@@ -54,6 +56,7 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
+    @Transactional
     @Override
     public void delete() {
         messageService.messagePrintOut("author.ID.input");
