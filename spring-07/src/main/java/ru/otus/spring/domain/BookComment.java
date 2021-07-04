@@ -23,7 +23,6 @@ public class BookComment {
     private Long bookCommentId;
 
     @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 5)
     @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "bookID")
     private Book book;

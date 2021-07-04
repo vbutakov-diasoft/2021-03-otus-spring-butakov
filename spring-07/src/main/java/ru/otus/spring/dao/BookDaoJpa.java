@@ -63,6 +63,7 @@ public class BookDaoJpa implements BookDao {
                 "select b from Book b where b.bookID = :bookID",
                 Book.class);
         query.setParameter("bookID", bookID);
+
         return Optional.ofNullable(query.getSingleResult());
     }
 

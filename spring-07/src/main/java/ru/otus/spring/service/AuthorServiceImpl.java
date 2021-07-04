@@ -44,15 +44,11 @@ public class AuthorServiceImpl implements AuthorService {
         messageService.messagePrintOut("author.name.input");
         String name = inputOutputService.readString();
         Author author = new Author(id, name);
-        if (author != null) {
-            try {
-                authorDao.update(author);
-                messageService.messagePrintOut("author.success.update", new Object[]{author.getAuthorID(), author.getName()});
-            } catch (AuthorNotFoundException e) {
-                messageService.messagePrintOut("author.error.update", e.getMessage());
-            }
-        } else {
-            messageService.messagePrintOut("author.error.update");
+        try {
+            authorDao.update(author);
+            messageService.messagePrintOut("author.success.update", new Object[]{author.getAuthorID(), author.getName()});
+        } catch (AuthorNotFoundException e) {
+            messageService.messagePrintOut("author.error.update", e.getMessage());
         }
     }
 
@@ -74,6 +70,7 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
+    @Transactional(readOnly=true)
     @Override
     public void findAll() {
         List<Author> list = authorDao.findAll();

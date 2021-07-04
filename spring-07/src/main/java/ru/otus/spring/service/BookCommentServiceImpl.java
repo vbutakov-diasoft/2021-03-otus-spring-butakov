@@ -81,6 +81,7 @@ public class BookCommentServiceImpl implements BookCommentService {
         bookCommentDao.delete(comment.get());
     }
 
+    @Transactional(readOnly=true)
     @Override
     public void findByBook() {
         Long bookID = bookIDInput();

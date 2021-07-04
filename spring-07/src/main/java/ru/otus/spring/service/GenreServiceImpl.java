@@ -75,6 +75,7 @@ public class GenreServiceImpl implements GenreService {
         }
     }
 
+    @Transactional(readOnly=true)
     @Override
     public void findAll() {
         List<Genre> list = genreDao.findAll();

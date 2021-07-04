@@ -32,7 +32,6 @@ public class Book {
     private Author author;
 
     @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 5)
     @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
     @JoinColumn(name = "genreID")
     private Genre genre;

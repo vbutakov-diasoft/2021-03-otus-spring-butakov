@@ -151,6 +151,7 @@ public class BookServiceImpl implements BookService{
 
     }
 
+    @Transactional(readOnly=true)
     @Override
     public void findAll() {
         List<Book> list = bookDao.findAll();
