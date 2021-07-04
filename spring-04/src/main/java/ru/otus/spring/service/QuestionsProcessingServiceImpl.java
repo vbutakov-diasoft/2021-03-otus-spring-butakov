@@ -21,7 +21,7 @@ public class QuestionsProcessingServiceImpl implements QuestionsProcessingServic
     }
 
     public boolean askQuestion(Question question){
-        ioService.printOut(messageSource.getMessage("exam.question",new String [] {String.valueOf(question.getQuestionNumber())}, settings.locale));
+        ioService.printOut(messageSource.getMessage("exam.question",new String [] {String.valueOf(question.getQuestionNumber())}, settings.getLocale()));
         ioService.printOut(question.getQuestion());
 
         for (int j = 0; j < question.getPossibleAnswer().length; j++) {

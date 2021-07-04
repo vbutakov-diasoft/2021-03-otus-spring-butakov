@@ -14,6 +14,6 @@ public class AppConfig {
 
     @Bean
     QuestionDaoSimple questionDaoSimple(AppSettings settings) {
-        return new QuestionDaoSimple(settings.fileName);
+        return new QuestionDaoSimple(settings.getFileName(), settings.getLocale());
     }
 }

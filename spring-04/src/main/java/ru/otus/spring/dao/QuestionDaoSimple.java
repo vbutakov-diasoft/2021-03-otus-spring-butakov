@@ -3,6 +3,7 @@ package ru.otus.spring.dao;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -14,13 +15,15 @@ import ru.otus.spring.exception.QuestionsLoadingException;
 public final class QuestionDaoSimple implements QuestionDao {
 
     private final String fileName;
+    private final Locale locale;
 
-    public QuestionDaoSimple(String fileName) {
+    public QuestionDaoSimple(String fileName,Locale locale) {
         this.fileName = fileName;
+        this.locale = locale;
     }
 
     public List<Question> findAll() throws QuestionsLoadingException {
-        String localFileName = fileName;
+        String localFileName = fileName +"_"+ locale.toString() + ".csv";
         List<Question> questions = new LinkedList<>();
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(localFileName)))) {
             char separator = ';';

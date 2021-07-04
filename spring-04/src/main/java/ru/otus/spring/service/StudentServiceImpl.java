@@ -22,7 +22,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     public Student askStudentName () {
-        ioService.printOut(messageSource.getMessage("exam.name",null, settings.locale));
+        ioService.printOut(messageSource.getMessage("exam.name",null, settings.getLocale()));
         return new Student(ioService.readString());
     }
 

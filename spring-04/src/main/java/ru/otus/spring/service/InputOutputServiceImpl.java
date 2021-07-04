@@ -14,7 +14,7 @@ public class InputOutputServiceImpl implements InputOutputService {
 
     private final Scanner scanner;
 
-    public InputOutputServiceImpl(@Value("#{ T(System).in}") InputStream inputStream, @Value("#{ T(System).out}") PrintStream printStream){
+    public InputOutputServiceImpl(@Value("#{ T(System).in}") InputStream inputStream, @Value("#{ T(System).out}") PrintStream printStream) {
         this.printStream = printStream;
         scanner = new Scanner(inputStream);
     }
@@ -24,10 +24,10 @@ public class InputOutputServiceImpl implements InputOutputService {
     }
 
     public String readString() {
-        return  scanner.nextLine();
+        return scanner.nextLine();
     }
 
     public int readInt() {
-        return  scanner.nextInt();
+        return scanner.nextInt();
     }
 }

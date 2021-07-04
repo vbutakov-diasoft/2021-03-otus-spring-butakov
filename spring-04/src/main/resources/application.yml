@@ -1,5 +1,5 @@
 application:
-  filename: questions.csv
+  filename: questions
   InputOutput:
     stream: System.in
   locale: en_US

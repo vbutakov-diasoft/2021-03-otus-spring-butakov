@@ -10,7 +10,7 @@ import java.util.Locale;
 @Configuration
 @ConfigurationProperties("application")
 public class AppSettings {
-    public String fileName;
-    public Locale locale;
+    private String fileName;
+    private Locale locale;
 
 }
