@@ -2,9 +2,9 @@ package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.spring.dao.BookCommentDao;
+import ru.otus.spring.repository.BookCommentRepository;
 import ru.otus.spring.domain.Book;
-import ru.otus.spring.dao.BookDao;
+import ru.otus.spring.repository.BookRepository;
 import ru.otus.spring.domain.BookComment;
 import ru.otus.spring.exception.BookCommentNotFoundException;
 
@@ -14,83 +14,83 @@ import java.util.Optional;
 @Service
 public class BookCommentServiceImpl implements BookCommentService {
 
-    private final BookDao bookDao;
+    private final BookRepository bookRepository;
     private final MessageService messageService;
     private final InputOutputService inputOutputService;
-    private final BookCommentDao bookCommentDao;
+    private final BookCommentRepository bookCommentRepository;
 
-    public BookCommentServiceImpl(BookDao bookDao, MessageService messageService, InputOutputService inputOutputService, BookCommentDao bookCommentDao) {
-        this.bookDao = bookDao;
+    public BookCommentServiceImpl(BookRepository bookRepository, MessageService messageService, InputOutputService inputOutputService, BookCommentRepository bookCommentRepository) {
+        this.bookRepository = bookRepository;
         this.messageService = messageService;
         this.inputOutputService = inputOutputService;
-        this.bookCommentDao = bookCommentDao;
+        this.bookCommentRepository = bookCommentRepository;
     }
 
     @Transactional
     @Override
     public void insert() {
         Long bookID = bookIDInput();
-        if (!bookDao.existsById(bookID)){
+        if (!bookRepository.existsById(bookID)){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
-        Optional<Book> book = bookDao.findById(bookID);
+        Optional<Book> book = bookRepository.findById(bookID);
         String comment = bookCommentCommentInput();
-        bookCommentDao.save(new BookComment(0L, book.get(), comment));
+        bookCommentRepository.save(new BookComment(0L, book.get(), comment));
     }
 
     @Transactional
     @Override
     public void update() throws BookCommentNotFoundException {
         Long bookID = bookIDInput();
-        if (!bookDao.existsById(bookID)){
+        if (!bookRepository.existsById(bookID)){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
-        Optional<Book> book = bookDao.findById(bookID);
-        List<BookComment> list = bookCommentDao.findByBookId(bookID);
+        Optional<Book> book = bookRepository.findById(bookID);
+        List<BookComment> list = bookCommentRepository.findByBookId(bookID);
         bookCommentListOutput(list);
         Long commentID = bookCommentIDInput();
-        Optional<BookComment> bookComment = bookCommentDao.findById(commentID);
+        Optional<BookComment> bookComment = bookCommentRepository.findById(commentID);
         if (!bookComment.isPresent()){
             messageService.messagePrintOut("bookcomment.error.coomentNotFound");
             return;
         }
         String comment = bookCommentCommentInput();
         bookComment.get().setComment(comment);
-        bookCommentDao.save(bookComment.get());
+        bookCommentRepository.save(bookComment.get());
     }
 
     @Transactional
     @Override
     public void delete() throws BookCommentNotFoundException {
         Long bookID = bookIDInput();
-        if (!bookDao.existsById(bookID)){
+        if (!bookRepository.existsById(bookID)){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
-        Optional<Book> book = bookDao.findById(bookID);
-        List<BookComment> list = bookCommentDao.findByBookId(bookID);
+        Optional<Book> book = bookRepository.findById(bookID);
+        List<BookComment> list = bookCommentRepository.findByBookId(bookID);
         bookCommentListOutput(list);
         Long commentID = bookCommentIDInput();
-        Optional<BookComment> comment = bookCommentDao.findById(commentID);
+        Optional<BookComment> comment = bookCommentRepository.findById(commentID);
         if (!comment.isPresent()){
             messageService.messagePrintOut("bookcomment.error.coomentNotFound");
             return;
         }
-        bookCommentDao.delete(comment.get());
+        bookCommentRepository.delete(comment.get());
     }
 
     @Transactional(readOnly=true)
     @Override
     public void findByBook() {
         Long bookID = bookIDInput();
-        if (!bookDao.existsById(bookID)){
+        if (!bookRepository.existsById(bookID)){
             messageService.messagePrintOut("book.error.bookNotFound");
             return;
         }
-        Optional<Book> book = bookDao.findById(bookID);
-        List<BookComment> list = bookCommentDao.findByBookId(bookID);
+        Optional<Book> book = bookRepository.findById(bookID);
+        List<BookComment> list = bookCommentRepository.findByBookId(bookID);
         bookCommentListOutput(list);
     }
 

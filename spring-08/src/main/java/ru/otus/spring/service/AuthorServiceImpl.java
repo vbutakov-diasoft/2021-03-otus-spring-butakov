@@ -2,22 +2,20 @@ package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.spring.dao.AuthorDao;
+import ru.otus.spring.repository.AuthorRepository;
 import ru.otus.spring.domain.Author;
-import ru.otus.spring.exception.AuthorAlreadyExistsException;
-import ru.otus.spring.exception.AuthorNotFoundException;
 
 import java.util.List;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-    private final AuthorDao authorDao;
+    private final AuthorRepository authorRepository;
     private final MessageService messageService;
     private final InputOutputService inputOutputService;
 
-    public AuthorServiceImpl(AuthorDao authorDao, MessageService messageService, InputOutputService inputOutputService) {
-        this.authorDao = authorDao;
+    public AuthorServiceImpl(AuthorRepository authorRepository, MessageService messageService, InputOutputService inputOutputService) {
+        this.authorRepository = authorRepository;
         this.messageService = messageService;
         this.inputOutputService = inputOutputService;
     }
@@ -28,7 +26,7 @@ public class AuthorServiceImpl implements AuthorService {
         messageService.messagePrintOut("author.name.input");
         String name = inputOutputService.readString();
         Author author = new Author(0L, name);
-        authorDao.save(author);
+        authorRepository.save(author);
     }
 
     @Transactional
@@ -39,7 +37,7 @@ public class AuthorServiceImpl implements AuthorService {
         messageService.messagePrintOut("author.name.input");
         String name = inputOutputService.readString();
         Author author = new Author(id, name);
-        authorDao.save(author);
+        authorRepository.save(author);
     }
 
     @Transactional
@@ -48,13 +46,13 @@ public class AuthorServiceImpl implements AuthorService {
         messageService.messagePrintOut("author.ID.input");
         Long id = inputOutputService.readLong();
         Author author = new Author(id, "");
-        authorDao.delete(author);
+        authorRepository.delete(author);
     }
 
     @Transactional(readOnly=true)
     @Override
     public void findAll() {
-        List<Author> list = authorDao.findAll();
+        List<Author> list = authorRepository.findAll();
         if (list.size() == 0) {
             messageService.messagePrintOut("author.list.empty");
             return;

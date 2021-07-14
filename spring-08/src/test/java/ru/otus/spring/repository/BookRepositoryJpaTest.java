@@ -1,11 +1,10 @@
-package ru.otus.spring.dao;
+package ru.otus.spring.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import ru.otus.spring.exception.*;
 
 import ru.otus.spring.domain.Author;
@@ -18,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("DAO для работы с книгами ")
 @DataJpaTest
-class BookDaoJpaTest {
+class BookRepositoryJpaTest {
 
     private static final Long DEFAULT_BOOK_ID = 1L;
     private static final String DEFAULT_BOOK_NAME = "Tom Sawyer";
@@ -33,7 +32,7 @@ class BookDaoJpaTest {
     private static final String DEFAULT_GENRE_NAME = "Novel";
 
     @Autowired
-    private BookDao bookDao;
+    private BookRepository bookRepository;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -45,9 +44,9 @@ class BookDaoJpaTest {
                 new Author(DEFAULT_AUTHOR_ID, DEFAULT_AUTHOR_NAME),
                 new Genre(DEFAULT_GENRE_ID, DEFAULT_GENRE_NAME));
 
-        bookDao.save(newBook);
+        bookRepository.save(newBook);
 
-        Optional<Book> bookDB  = bookDao.findById(NEW_BOOK_ID);
+        Optional<Book> bookDB  = bookRepository.findById(NEW_BOOK_ID);
         System.out.println(bookDB.get().getBookID());
         assertThat(bookDB).isNotEmpty().get().hasFieldOrPropertyWithValue("bookID", NEW_BOOK_ID);
         assertThat(bookDB).isNotEmpty().get().hasFieldOrPropertyWithValue("title", NEW_BOOK_NAME);
@@ -60,15 +59,15 @@ class BookDaoJpaTest {
                 new Author(DEFAULT_AUTHOR_ID, DEFAULT_AUTHOR_NAME),
                 new Genre(DEFAULT_GENRE_ID, DEFAULT_GENRE_NAME));
 
-        bookDao.delete(book);
+        bookRepository.delete(book);
 
-        assertThat(bookDao.existsById(DEFAULT_BOOK_ID)).isFalse();
+        assertThat(bookRepository.existsById(DEFAULT_BOOK_ID)).isFalse();
     }
 
     @Test
     @DisplayName("должен правильно находить книгу по идентификатору")
     void shouldFindBookByID() {
-        Optional<Book> bookDB = bookDao.findById(DEFAULT_BOOK_ID);
+        Optional<Book> bookDB = bookRepository.findById(DEFAULT_BOOK_ID);
         assertThat(bookDB).isNotEmpty().get().hasFieldOrPropertyWithValue("bookID", DEFAULT_BOOK_ID);
         assertThat(bookDB).isNotEmpty().get().hasFieldOrPropertyWithValue("title", DEFAULT_BOOK_NAME);
     }

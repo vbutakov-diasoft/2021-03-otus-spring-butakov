@@ -5,6 +5,7 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     initialization-mode: always
+    data: schema.sql,data.sql
   h2:
     console:
       path: /h2-console
