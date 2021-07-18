@@ -2,6 +2,7 @@ package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.spring.exception.BookNotFoundException;
 import ru.otus.spring.repository.AuthorRepository;
 import ru.otus.spring.repository.BookRepository;
 import ru.otus.spring.repository.GenreRepository;
@@ -45,6 +46,21 @@ public class BookServiceImpl implements BookService {
         return Optional.ofNullable(author);
     }
 
+    private Author getAuthor2(String authorName) {
+        Author author = null;
+        List<Author> authors = authorRepository.findByName(authorName);
+        if (authors.size() > 1) {
+            messageService.messagePrintOut("book.error.foundToManyAuthors");
+        } else if (authors.size() == 1) {
+            author = authors.get(0);
+        }
+        if (authors.size() == 0) {
+            author = authorRepository.save(new Author(0L, authorName));
+
+        }
+        return author;
+    }
+
     private Optional<Genre> getGenre() {
         Genre genre = null;
         String genreName = bookGenreNameInput();
@@ -58,6 +74,20 @@ public class BookServiceImpl implements BookService {
             genre = genreRepository.save(new Genre(0L, genreName));
         }
         return Optional.ofNullable(genre);
+    }
+
+    private Genre getGenre2(String genreName) {
+        Genre genre = null;
+        List<Genre> genres = genreRepository.findByName(genreName);
+        if (genres.size() > 1) {
+            messageService.messagePrintOut("book.error.foundToManyGenres");
+        } else if (genres.size() == 1) {
+            genre = genres.get(0);
+        }
+        if (genres.size() == 0) {
+            genre = genreRepository.save(new Genre(0L, genreName));
+        }
+        return genre;
     }
 
     @Transactional
@@ -159,6 +189,51 @@ public class BookServiceImpl implements BookService {
                     + book.getGenre().getName() + "; ";
             inputOutputService.printOut(message);
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Book> getAll() {
+        return  bookRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Book findById(Long id) {
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("book.error.bookNotFound"));
+    }
+
+    @Transactional
+    @Override
+    public Long insertByParam(String title, String authorName, String genreName) {
+        Author author = getAuthor2(authorName);
+
+        Genre genre = getGenre2(genreName);
+
+        Book newBook = new Book(0L, title, author, genre);
+        bookRepository.save(newBook);
+        return newBook.getBookID();
+    }
+
+    @Transactional
+    @Override
+    public void updateById(Long id, String title, String authorName, String genreName){
+        if (!bookRepository.existsById(id)) {
+            throw(new BookNotFoundException("book.error.bookNotFound"));
+        }
+
+        Author author = getAuthor2(authorName);
+
+        Genre genre = getGenre2(genreName);
+
+        Book newBook = new Book(id, title, author, genre);
+        bookRepository.save(newBook);
+    }
+
+    @Transactional
+    @Override
+    public void deleteById(Long id) {
+        bookRepository.deleteById(id);
     }
 
     @Override

@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 application:
   locale: ru_RU
 
@@ -5,7 +8,7 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     initialization-mode: always
-    data: schema.sql,data.sql
+    data: classpath:data.sql
   h2:
     console:
       path: /h2-console
@@ -17,7 +20,6 @@ spring:
       ddl-auto: none
 
     show-sql: true
-
 
   messages:
     basename: i18n.messages

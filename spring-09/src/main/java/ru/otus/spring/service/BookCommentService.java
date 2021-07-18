@@ -11,6 +11,7 @@ public interface BookCommentService {
     void update() throws BookCommentNotFoundException;
     void delete() throws BookCommentNotFoundException;
     void findByBook();
+    List<BookComment> getAllCommentsByBookID(Long bookId);
 
     Long bookIDInput();
     Long bookCommentIDInput();

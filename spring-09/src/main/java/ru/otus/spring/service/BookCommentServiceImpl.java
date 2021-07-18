@@ -94,6 +94,12 @@ public class BookCommentServiceImpl implements BookCommentService {
         bookCommentListOutput(list);
     }
 
+    @Transactional(readOnly=true)
+    @Override
+    public List<BookComment> getAllCommentsByBookID(Long bookId) {
+        return bookCommentRepository.findByBookId(bookId);
+    }
+
     @Override
     public Long bookIDInput() {
         messageService.messagePrintOut("book.ID.input");
