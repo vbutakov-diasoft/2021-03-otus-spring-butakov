@@ -8,25 +8,21 @@ import ru.otus.spring.config.AppSettings;
 public class ExamProcessingServiceImpl implements ExamProcessingService {
 
     private final InputOutputService ioService;
-    private final MessageSource messageSource;
-    private final AppSettings settings;
 
     private static final int COUNT_OF_RIGHT_ANSERT_TO_PASS = 3;
 
-    public ExamProcessingServiceImpl(InputOutputService ioService, MessageSource messageSource, AppSettings settings) {
+    public ExamProcessingServiceImpl(InputOutputService ioService) {
         this.ioService = ioService;
-        this.messageSource = messageSource;
-        this.settings = settings;
     }
 
     public void printTestResult(String studentName, int countRightAnswer) {
-        ioService.printOut(messageSource.getMessage("exam.name", null, settings.getLocale()));
+        ioService.printLocalOut("exam.name");
         ioService.printOut(studentName);
-        ioService.printOut(messageSource.getMessage("exam.result", null, settings.getLocale()));
+        ioService.printLocalOut("exam.result");
         ioService.printOut(String.valueOf(countRightAnswer));
         if (countRightAnswer >= COUNT_OF_RIGHT_ANSERT_TO_PASS)
-            ioService.printOut(messageSource.getMessage("exam.passed", null, settings.getLocale()));
+            ioService.printLocalOut("exam.passed");
         else
-            ioService.printOut(messageSource.getMessage("exam.failed", null, settings.getLocale()));
+            ioService.printLocalOut("exam.failed");
     }
 }

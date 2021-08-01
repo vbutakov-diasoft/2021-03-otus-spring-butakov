@@ -1,7 +1,5 @@
 application:
   filename: questions
-  InputOutput:
-    stream: System.in
   locale: en_US
 
 spring:

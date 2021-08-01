@@ -10,18 +10,14 @@ import ru.otus.spring.domain.Question;
 public class QuestionsProcessingServiceImpl implements QuestionsProcessingService{
 
     private final InputOutputService ioService;
-    private final MessageSource messageSource;
 
     @Autowired
-    private AppSettings settings;
-
-    public QuestionsProcessingServiceImpl(InputOutputService ioService, MessageSource messageSource) {
+    public QuestionsProcessingServiceImpl(InputOutputService ioService) {
         this.ioService = ioService;
-        this.messageSource = messageSource;
     }
 
     public boolean askQuestion(Question question){
-        ioService.printOut(messageSource.getMessage("exam.question",new String [] {String.valueOf(question.getQuestionNumber())}, settings.getLocale()));
+        ioService.printLocalOut("exam.question");
         ioService.printOut(question.getQuestion());
 
         for (int j = 0; j < question.getPossibleAnswer().length; j++) {

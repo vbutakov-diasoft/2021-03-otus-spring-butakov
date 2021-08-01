@@ -3,7 +3,8 @@ package ru.otus.spring.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import ru.otus.spring.dao.QuestionDaoSimple;
+import ru.otus.spring.dao.QuestionDaoCsv;
+import ru.otus.spring.service.FileNameLocaleService;
 
 @Configuration
 public class AppConfig {
@@ -13,7 +14,8 @@ public class AppConfig {
     }
 
     @Bean
-    QuestionDaoSimple questionDaoSimple(AppSettings settings) {
-        return new QuestionDaoSimple(settings.getFileName(), settings.getLocale());
+    QuestionDaoCsv questionDaoSimple(AppSettings settings) {
+        FileNameLocaleService fileNameLocale = new FileNameLocaleService(settings.getFileName(),settings.getLocale());
+        return new QuestionDaoCsv(fileNameLocale, settings.getLocale());
     }
 }

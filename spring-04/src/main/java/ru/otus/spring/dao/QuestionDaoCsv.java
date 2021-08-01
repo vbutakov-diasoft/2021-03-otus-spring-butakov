@@ -11,19 +11,20 @@ import com.opencsv.CSVReader;
 
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.exception.QuestionsLoadingException;
+import ru.otus.spring.service.FileNameLocaleService;
 
-public final class QuestionDaoSimple implements QuestionDao {
+public final class QuestionDaoCsv implements QuestionDao {
 
-    private final String fileName;
+    private final FileNameLocaleService fileNameLocale;
     private final Locale locale;
 
-    public QuestionDaoSimple(String fileName,Locale locale) {
-        this.fileName = fileName;
+    public QuestionDaoCsv(FileNameLocaleService fileNameLocale, Locale locale) {
+        this.fileNameLocale = fileNameLocale;
         this.locale = locale;
     }
 
     public List<Question> findAll() throws QuestionsLoadingException {
-        String localFileName = fileName +"_"+ locale.toString() + ".csv";
+        String localFileName = fileNameLocale.getFileNameLocale();
         List<Question> questions = new LinkedList<>();
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(localFileName)))) {
             char separator = ';';
@@ -48,11 +49,10 @@ public final class QuestionDaoSimple implements QuestionDao {
                     } catch (Exception e) {
                         throw new QuestionsLoadingException("Ошибка загрузки файла");
                     }
-
                 }
             }
         } catch (Throwable  e) {
-            throw new QuestionsLoadingException("Ошибка загрузки файла");
+            throw new QuestionsLoadingException("Ошибка чтения файла");
         }
         return questions;
     }

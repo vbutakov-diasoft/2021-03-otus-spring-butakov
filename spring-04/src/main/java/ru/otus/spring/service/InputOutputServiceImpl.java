@@ -11,12 +11,17 @@ import java.util.Scanner;
 public class InputOutputServiceImpl implements InputOutputService {
 
     private final PrintStream printStream;
-
+    private final LocalizationService localizationService;
     private final Scanner scanner;
 
-    public InputOutputServiceImpl(@Value("#{ T(System).in}") InputStream inputStream, @Value("#{ T(System).out}") PrintStream printStream) {
+    public InputOutputServiceImpl(@Value("#{ T(System).in}") InputStream inputStream, @Value("#{ T(System).out}") PrintStream printStream, LocalizationService localizationService) {
         this.printStream = printStream;
         scanner = new Scanner(inputStream);
+        this.localizationService = localizationService;
+    }
+
+    public void printLocalOut(String st) {
+        printStream.println(localizationService.getLocalizedString(st,null));
     }
 
     public void printOut(String st) {

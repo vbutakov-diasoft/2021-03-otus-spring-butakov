@@ -10,19 +10,14 @@ import ru.otus.spring.domain.Student;
 public class StudentServiceImpl implements StudentService{
 
     private final InputOutputService ioService;
-    private final MessageSource messageSource;
 
     @Autowired
-    private AppSettings settings;
-
-    @Autowired
-    public StudentServiceImpl(InputOutputService ioService, MessageSource messageSource) {
+    public StudentServiceImpl(InputOutputService ioService) {
         this.ioService = ioService;
-        this.messageSource = messageSource;
     }
 
     public Student askStudentName () {
-        ioService.printOut(messageSource.getMessage("exam.name",null, settings.getLocale()));
+        ioService.printLocalOut("exam.name");
         return new Student(ioService.readString());
     }
 

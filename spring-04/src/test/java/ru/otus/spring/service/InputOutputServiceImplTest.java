@@ -28,24 +28,10 @@ public class InputOutputServiceImplTest {
 
     private static final String ANY_STRING = "любая строка";
 
-    private Scanner scanner;
-
-    @BeforeEach
-    void setUp() {
-        scanner = new Scanner(inputStream);
-    }
-
     @DisplayName("Должен выводить переданную строку")
     @Test
     public void shouldPrintString() {
         inputOutputServiceImpl.printOut(ANY_STRING);
         Mockito.verify(printStream).println(eq(ANY_STRING));
-    }
-
-    @DisplayName("Должен считывать строку")
-    @Test
-    public void shouldReadString() {
-        Mockito.when(scanner.nextLine()).thenReturn(ANY_STRING);
-        String s = inputOutputServiceImpl.readString();
     }
 }
