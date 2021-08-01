@@ -22,7 +22,7 @@ class BookRepositoryJpaTest {
     private static final Long DEFAULT_BOOK_ID = 1L;
     private static final String DEFAULT_BOOK_NAME = "Tom Sawyer";
 
-    private static final Long NEW_BOOK_ID = 2L;
+    private static final Long NEW_BOOK_ID = 3L;
     private static final String NEW_BOOK_NAME = "Huckleberry Finn";
 
     private static final Long DEFAULT_AUTHOR_ID = 1L;

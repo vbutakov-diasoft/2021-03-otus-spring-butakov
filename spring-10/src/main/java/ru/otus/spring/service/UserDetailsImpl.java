@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.otus.spring.domain.User;
+import org.springframework.security.core.userdetails.User.UserBuilder;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +26,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.<GrantedAuthority>singletonList(new SimpleGrantedAuthority("User"));
+        return Collections.<GrantedAuthority>singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
