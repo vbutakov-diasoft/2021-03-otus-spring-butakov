@@ -17,7 +17,7 @@ public class Main {
 
         ApplicationContext context = SpringApplication.run(Main.class, args);
 
-        EvolveMaker dm = context.getBean(EvolveMaker.class);
+        EvolveMaker em = context.getBean(EvolveMaker.class);
 
         ForkJoinPool pool = ForkJoinPool.commonPool();
 
@@ -25,7 +25,7 @@ public class Main {
             pool.execute(() -> {
                 System.out.println("Caterpillar climbs a tree ");
                 Caterpillar caterpillar = getCaterpillar();
-                dm.evolving(caterpillar);
+                em.evolving(caterpillar);
                 System.out.println();
             });
 

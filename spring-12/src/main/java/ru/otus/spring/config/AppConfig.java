@@ -15,9 +15,13 @@ import org.springframework.integration.scheduling.PollerMetadata;
 @EnableIntegration
 public class AppConfig {
 
+    private static final int MAXMESSAGESPERPOL = 2;
+    private static final int CAPACITY = 2;
+    private static final int PERIOD = 2;
+
     @Bean
     public QueueChannel cocoonChannel() {
-        return MessageChannels.queue(10).get();
+        return MessageChannels.queue(CAPACITY).get();
     }
 
     @Bean
@@ -27,7 +31,7 @@ public class AppConfig {
 
     @Bean(name = PollerMetadata.DEFAULT_POLLER)
     public PollerMetadata poller() {
-        return Pollers.fixedRate(100).maxMessagesPerPoll(2).get();
+        return Pollers.fixedRate(PERIOD).maxMessagesPerPoll(MAXMESSAGESPERPOL).get();
     }
 
     @Bean
