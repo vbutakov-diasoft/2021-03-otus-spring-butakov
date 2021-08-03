@@ -3,28 +3,25 @@ package ru.otus.spring.dao;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 
 import ru.otus.spring.domain.Question;
+import ru.otus.spring.exception.FileLoadingException;
 import ru.otus.spring.exception.QuestionsLoadingException;
-import ru.otus.spring.service.FileNameLocaleService;
 
 public final class QuestionDaoCsv implements QuestionDao {
 
-    private final FileNameLocaleService fileNameLocale;
-    private final Locale locale;
+    private final String fileNameLocale;
 
-    public QuestionDaoCsv(FileNameLocaleService fileNameLocale, Locale locale) {
+    public QuestionDaoCsv(String fileNameLocale) {
         this.fileNameLocale = fileNameLocale;
-        this.locale = locale;
     }
 
-    public List<Question> findAll() throws QuestionsLoadingException {
-        String localFileName = fileNameLocale.getFileNameLocale();
+    public List<Question> findAll() throws QuestionsLoadingException, FileLoadingException {
+        String localFileName = fileNameLocale;
         List<Question> questions = new LinkedList<>();
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(localFileName)))) {
             char separator = ';';
@@ -47,12 +44,12 @@ public final class QuestionDaoCsv implements QuestionDao {
                         questions.add(question);
                         index++;
                     } catch (Exception e) {
-                        throw new QuestionsLoadingException("Ошибка загрузки файла");
+                        throw new QuestionsLoadingException("Ошибка загрузки вопросов");
                     }
                 }
             }
         } catch (Throwable  e) {
-            throw new QuestionsLoadingException("Ошибка чтения файла");
+            throw new FileLoadingException("Ошибка загрузки файла");
         }
         return questions;
     }

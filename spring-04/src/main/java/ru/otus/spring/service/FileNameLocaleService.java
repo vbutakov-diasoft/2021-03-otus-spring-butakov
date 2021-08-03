@@ -1,12 +1,14 @@
 package ru.otus.spring.service;
 
-import java.util.Locale;
+import ru.otus.spring.config.AppSettings;
 
 public class FileNameLocaleService {
     private final String fileNameLocale;
+    private final AppSettings appSettings;
 
-    public FileNameLocaleService(String fileNameLocale, Locale locale) {
-        this.fileNameLocale = fileNameLocale +"_"+ locale.toString() + ".csv";
+    public FileNameLocaleService(AppSettings appSettings) {
+        this.appSettings = appSettings;
+        this.fileNameLocale = appSettings.getFileName() +"_"+ appSettings.getLocale().toString() + ".csv";
     }
 
     public String getFileNameLocale() {

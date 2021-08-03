@@ -9,13 +9,8 @@ import ru.otus.spring.service.FileNameLocaleService;
 @Configuration
 public class AppConfig {
     @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfig(){
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
-    @Bean
-    QuestionDaoCsv questionDaoSimple(AppSettings settings) {
-        FileNameLocaleService fileNameLocale = new FileNameLocaleService(settings.getFileName(),settings.getLocale());
-        return new QuestionDaoCsv(fileNameLocale, settings.getLocale());
+    QuestionDaoCsv questionDaoCsv(AppSettings settings) {
+        FileNameLocaleService fileNameLocale = new FileNameLocaleService(settings);
+        return new QuestionDaoCsv(fileNameLocale.getFileNameLocale());
     }
 }

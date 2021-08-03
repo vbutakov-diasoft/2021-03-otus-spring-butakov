@@ -7,11 +7,11 @@ import ru.otus.spring.config.AppSettings;
 @Service
 public class ExamProcessingServiceImpl implements ExamProcessingService {
 
-    private final InputOutputService ioService;
+    private final InputOutputLocalizationService ioService;
 
     private static final int COUNT_OF_RIGHT_ANSERT_TO_PASS = 3;
 
-    public ExamProcessingServiceImpl(InputOutputService ioService) {
+    public ExamProcessingServiceImpl(InputOutputLocalizationService ioService) {
         this.ioService = ioService;
     }
 

@@ -9,10 +9,10 @@ import ru.otus.spring.domain.Question;
 @Service
 public class QuestionsProcessingServiceImpl implements QuestionsProcessingService{
 
-    private final InputOutputService ioService;
+    private final InputOutputLocalizationService ioService;
 
     @Autowired
-    public QuestionsProcessingServiceImpl(InputOutputService ioService) {
+    public QuestionsProcessingServiceImpl(InputOutputLocalizationService ioService) {
         this.ioService = ioService;
     }
 

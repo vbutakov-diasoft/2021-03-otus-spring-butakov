@@ -15,7 +15,7 @@ public class LocalizationServiceImpl implements LocalizationService {
     }
 
     @Override
-    public String getLocalizedString(String var, String[] args) {
+    public String getLocalizedString(String var, String... args) {
         return messageSource.getMessage(var, args, appSettings.getLocale());
     }
 }

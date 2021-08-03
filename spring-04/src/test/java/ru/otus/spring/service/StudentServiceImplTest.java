@@ -20,7 +20,7 @@ class StudentServiceImplTest {
     @Test
     @DisplayName("Спросить имя студента")
     void askStudentNameTest() {
-        InputOutputService ioMock = mock(InputOutputService.class);
+        InputOutputLocalizationService ioMock = mock(InputOutputLocalizationService.class);
         StudentService studentServiceImpl = new StudentServiceImpl(ioMock);
 
         Mockito.when(ioMock.readString()).thenReturn(STUDENT_NAME);

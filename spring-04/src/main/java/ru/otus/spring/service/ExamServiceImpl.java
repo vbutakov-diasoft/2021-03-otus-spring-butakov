@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.domain.Student;
+import ru.otus.spring.exception.FileLoadingException;
 import ru.otus.spring.exception.QuestionsLoadingException;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class ExamServiceImpl implements ExamService {
         this.examProcessingService = examProcessingService;
     }
 
-    public void testing() throws QuestionsLoadingException {
+    public void testing() throws QuestionsLoadingException, FileLoadingException {
         Student student = studentService.askStudentName();
         List<Question> questions = questionService.findAll();
         int res = 0;

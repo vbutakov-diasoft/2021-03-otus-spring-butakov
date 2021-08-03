@@ -9,10 +9,10 @@ import ru.otus.spring.domain.Student;
 @Service
 public class StudentServiceImpl implements StudentService{
 
-    private final InputOutputService ioService;
+    private final InputOutputLocalizationService ioService;
 
     @Autowired
-    public StudentServiceImpl(InputOutputService ioService) {
+    public StudentServiceImpl(InputOutputLocalizationService ioService) {
         this.ioService = ioService;
     }
 

@@ -20,12 +20,11 @@ public class QuestionsProcessingServiceImplTest {
     @Test
     @DisplayName("должен вернуть true, если ответ на вопрос верный")
     void askStudentNameTest() throws IOException {
-        InputOutputService ioMock = mock(InputOutputService.class);
+        InputOutputLocalizationService ioMock = mock(InputOutputLocalizationService.class);
         Question question = new Question(QUESTIONNUMBER,DEFINITION, POSSIBLEANSWER,RIGHTANSWERNUMBER);
 
         QuestionsProcessingServiceImpl questionsProcessingService = new QuestionsProcessingServiceImpl(ioMock);
         Mockito.when(ioMock.readInt()).thenReturn(RIGHTANSWERNUMBER);
-        Mockito.doNothing().when(ioMock).printOut(Mockito.anyString());
 
         boolean answerIs = questionsProcessingService.askQuestion(question);
         assertThat(answerIs).isTrue();
