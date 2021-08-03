@@ -24,3 +24,7 @@ spring:
   messages:
     basename: i18n.messages
     fallback-to-system-locale: false
+
+jwt:
+  privateKey: classpath:app.key
+  publicKey: classpath:app.pub

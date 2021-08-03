@@ -5,3 +5,4 @@ INSERT INTO BOOK(BOOKID, title, AUTHORID, GENREID) values(2, 'A Horses Tale', 1,
 insert into BOOK_COMMENT(BOOK_COMMENT_ID, BOOKID, comment) values(1, 2, 'comment1');
 insert into BOOK_COMMENT(BOOK_COMMENT_ID, BOOKID, comment) values(2, 2, 'comment2');
 insert into BOOK_COMMENT(BOOK_COMMENT_ID, BOOKID, comment) values(3, 1, 'comment3');
+insert into USER(userid, login, password) values(1, 'user', 'pass');

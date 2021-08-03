@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName(value = "Контроллер книг")
 public class BookControllerUserTest {
+
     @Autowired
     private MockMvc mvc;
     private static final String GET = "get";
@@ -37,18 +38,18 @@ public class BookControllerUserTest {
         );
     }
 
-    @DisplayName("должен возвращать ошибку 3xx")
+    @DisplayName("должен возвращать ошибку Unauthorized")
     @ParameterizedTest
     @MethodSource("addFixture")
     void shouldReturnCorrectBooksList(String method, String url) throws Exception {
         if (method.equals(GET)) {
-            mvc.perform(get(url)).andExpect(status().is3xxRedirection());
+            mvc.perform(get(url)).andExpect(status().isUnauthorized());
         } else if (method.equals(POST)) {
-            mvc.perform(post(url)).andExpect(status().is3xxRedirection());
+            mvc.perform(post(url)).andExpect(status().isUnauthorized());
         } else if (method.equals(PUT)) {
-            mvc.perform(put(url)).andExpect(status().is3xxRedirection());
+            mvc.perform(put(url)).andExpect(status().isUnauthorized());
         } else if (method.equals(DELETE)) {
-            mvc.perform(delete(url)).andExpect(status().is3xxRedirection());
+            mvc.perform(delete(url)).andExpect(status().isUnauthorized());
         }
     }
 }
