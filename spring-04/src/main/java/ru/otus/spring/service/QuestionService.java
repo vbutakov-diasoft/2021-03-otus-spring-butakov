@@ -1,14 +1,12 @@
 package ru.otus.spring.service;
 
-import com.opencsv.exceptions.CsvValidationException;
 import ru.otus.spring.domain.Question;
-import ru.otus.spring.exception.FileLoadingException;
+import ru.otus.spring.exception.SourceLoadingException;
 import ru.otus.spring.exception.QuestionsLoadingException;
 
-import java.io.IOException;
 import java.util.List;
 
 interface QuestionService {
 
-    List<Question> findAll() throws QuestionsLoadingException, FileLoadingException;
+    List<Question> findAll() throws QuestionsLoadingException, SourceLoadingException;
 }

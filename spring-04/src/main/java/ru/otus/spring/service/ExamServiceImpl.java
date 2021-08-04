@@ -1,15 +1,12 @@
 package ru.otus.spring.service;
 
-import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.domain.Student;
-import ru.otus.spring.exception.FileLoadingException;
+import ru.otus.spring.exception.SourceLoadingException;
 import ru.otus.spring.exception.QuestionsLoadingException;
 
-import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -28,7 +25,7 @@ public class ExamServiceImpl implements ExamService {
         this.examProcessingService = examProcessingService;
     }
 
-    public void testing() throws QuestionsLoadingException, FileLoadingException {
+    public void testing() throws QuestionsLoadingException, SourceLoadingException {
         Student student = studentService.askStudentName();
         List<Question> questions = questionService.findAll();
         int res = 0;

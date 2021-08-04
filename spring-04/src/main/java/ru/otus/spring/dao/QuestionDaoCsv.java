@@ -8,8 +8,10 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Question;
-import ru.otus.spring.exception.FileLoadingException;
+import ru.otus.spring.exception.SourceLoadingException;
 import ru.otus.spring.exception.QuestionsLoadingException;
 
 public final class QuestionDaoCsv implements QuestionDao {
@@ -20,7 +22,7 @@ public final class QuestionDaoCsv implements QuestionDao {
         this.fileNameLocale = fileNameLocale;
     }
 
-    public List<Question> findAll() throws QuestionsLoadingException, FileLoadingException {
+    public List<Question> findAll() throws QuestionsLoadingException, SourceLoadingException {
         String localFileName = fileNameLocale;
         List<Question> questions = new LinkedList<>();
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(localFileName)))) {
@@ -49,7 +51,7 @@ public final class QuestionDaoCsv implements QuestionDao {
                 }
             }
         } catch (Throwable  e) {
-            throw new FileLoadingException("Ошибка загрузки файла");
+            throw new SourceLoadingException("Ошибка загрузки источника данных");
         }
         return questions;
     }
