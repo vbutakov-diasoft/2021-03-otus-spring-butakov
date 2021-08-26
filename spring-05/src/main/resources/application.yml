@@ -1,0 +1,8 @@
+application:
+  filename: questions
+  locale: en_US
+
+spring:
+  messages:
+    basename: i18n.messages
+    fallback-to-system-locale: false
