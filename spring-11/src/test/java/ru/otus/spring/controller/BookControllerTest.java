@@ -48,7 +48,7 @@ class BookControllerTest {
     @BeforeEach
     void setUp() throws Exception {
         var result = mvc.perform(post("/token")
-                .header("Authorization", "Basic dXNlciBwYXNz"))
+                .header("Authorization", "Basic dXNlcjpwYXNz"))
                 .andExpect(status().isOk())
                 .andReturn();
         token = result.getResponse().getContentAsString();
@@ -57,7 +57,6 @@ class BookControllerTest {
     @Test
     @DisplayName("должен возвращать список книг")
     void shouldReturnCorrectBooksList() throws Exception {
-        /*
         List<Book> books = List.of(EXISTING_BOOK, new Book(2L, "A Horses Tale", EXISTING_AUTHOR, EXISTING_GENRE));
 
         List<BookDto> expectedResult = books.stream()
@@ -67,9 +66,8 @@ class BookControllerTest {
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
-        */
     }
-/*
+
     @Test
     @DisplayName("должен возвращать корректный список комментариев по id книги")
     void shouldReturnCorrectBookCommentList() throws Exception {
@@ -154,5 +152,4 @@ class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(bookDto)));
     }
- */
-}
+ }

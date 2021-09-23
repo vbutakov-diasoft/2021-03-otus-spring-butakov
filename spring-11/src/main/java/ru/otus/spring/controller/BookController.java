@@ -2,7 +2,6 @@ package ru.otus.spring.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.controller.dto.BookCommentDto;
 import ru.otus.spring.controller.dto.BookDto;
@@ -39,7 +38,6 @@ public class BookController {
     }
 
     @PostMapping("/api/book")
-    @Secured( "ROLE_ADMIN" )
     public BookDto postBook(@RequestBody BookDto book) {
         book.setId(bookService.insertByParam(book.getTitle(), book.getAuthor(), book.getGenre()));
         return book;
